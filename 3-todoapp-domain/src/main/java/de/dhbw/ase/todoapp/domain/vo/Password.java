@@ -36,7 +36,7 @@ public final class Password
 
     private boolean isValid(final String passwordValue)
     {
-        return passwordValue.length() >= 8;
+        return passwordValue.matches("[a-zA-Z0-9]*") && passwordValue.length() >= 8;
     }
 
 

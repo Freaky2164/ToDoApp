@@ -125,67 +125,61 @@ public class Task
 
     public UUID getId()
     {
-        return this.id;
+        return id;
     }
 
 
-    public UUID getTodoListId()
+    public UUID getTaskListId()
     {
-        return this.taskListId;
+        return taskListId;
     }
 
 
-    public UUID getTodoId()
+    public UUID getTaskId()
     {
-        return this.taskId;
+        return taskId;
     }
 
 
     public Name getName()
     {
-        return this.name;
-    }
-
-
-    public CalendarDate getDueDate()
-    {
-        return this.dueDate;
+        return name;
     }
 
 
     public Description getDescription()
     {
-        return this.description;
+        return description;
+    }
+
+
+    public CalendarDate getDueDate()
+    {
+        return dueDate;
     }
 
 
     public CalendarDate getReminderDate()
     {
-        return this.reminderDate;
+        return reminderDate;
     }
 
 
     public boolean isDone()
     {
-        return this.done;
-    }
-
-
-    public boolean isSubTodo()
-    {
-        return this.taskId != null;
+        return done;
     }
 
 
     public LocalDate getCreationDate()
     {
-        return this.creationDate;
+        return creationDate;
     }
 
 
     public LocalDate getCompletionDate()
     {
-        return this.completionDate;
+        return completionDate;
     }
 
 

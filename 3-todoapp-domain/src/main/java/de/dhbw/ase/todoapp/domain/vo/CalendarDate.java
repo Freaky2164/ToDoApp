@@ -1,8 +1,8 @@
 package de.dhbw.ase.todoapp.domain.vo;
 
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import de.dhbw.ase.todoapp.domain.exceptions.PastDateException;
@@ -36,7 +36,7 @@ public final class CalendarDate
 
     private boolean isFutureDate(final LocalDate date)
     {
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.now().minusDays(1);
         return date.isAfter(currentDate);
     }
 
@@ -55,8 +55,8 @@ public final class CalendarDate
 
     public String formatDate()
     {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd, MMMM, yyyy");
-        return sdf.format(date);
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        return date.format(pattern);
     }
 
 
@@ -82,5 +82,12 @@ public final class CalendarDate
         if (getClass() != obj.getClass()) return false;
         CalendarDate other = (CalendarDate)obj;
         return Objects.equals(date, other.date);
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return formatDate();
     }
 }

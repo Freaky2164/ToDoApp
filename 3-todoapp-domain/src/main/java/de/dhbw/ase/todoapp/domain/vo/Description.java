@@ -57,4 +57,11 @@ public final class Description
         Description other = (Description)obj;
         return Objects.equals(descriptionText, other.descriptionText);
     }
+
+
+    @Override
+    public String toString()
+    {
+        return descriptionText;
+    }
 }
