@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .completed-todos {
+            margin-top: 3em;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card-header,
+        .card-footer {
+            flex: 0 0 auto;
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .list-group {
+            flex: 1 1 auto;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">To-Do</h1>
+
+        <ul class="nav nav-tabs mb-3" id="myTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="open-tab" data-bs-toggle="tab" data-bs-target="#open" type="button"
+                    role="tab" aria-controls="open" aria-selected="true">Offen</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed"
+                    type="button" role="tab" aria-controls="completed" aria-selected="false">Abgeschlossen</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabsContent">
+            <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open-tab">
+                <div class="text-end mb-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#createTodoListModal">
+                        Neue To-Do-Liste erstellen
+                    </button>
+                </div>
+                <div th:each="todoListEntry, listIndex: ${todoMap}">
+                    <div class="card mt-3">
+                        <div class="card-header d-flex justify-content-between">
+                            <h2 class="card-title fw-bold" th:text="${todoListEntry.key.name}"></h2>
+                            <form th:action="@{/deleteTodoList}" method="post">
+                                <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                <button type="submit" class="btn btn-danger">Liste löschen</button>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li th:each="todo : ${todoListEntry.value}"
+                                    th:if="${todo.todoListId eq todoListEntry.key.id and todo.todoId == null}"
+                                    class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold" th:text="${todo.name}"></div>
+                                            <div class="fw-bold" th:text="${todo.description}"></div>
+                                            <div class="text-muted" th:text="${todo.dueDate}"></div>
+                                        </div>
+                                        <div class="btn-group" role="group" aria-label="Sub Todo">
+                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                                th:data-bs-target="'#createSubTodoModal-' + ${listIndex.index}">
+                                                Neues Sub-To-Do hinzufügen
+                                            </button>
+                                        </div>
+                                        <div class="btn-group" role="group" aria-label="Todo Actions">
+                                            <form th:action="@{/deleteTodo}" method="post">
+                                                <input type="hidden" name="todoId" th:value="${todo.id}">
+                                                <button type="submit" class="btn btn-danger me-2">Löschen</button>
+                                            </form>
+                                            <button type="button" class="btn btn-warning me-2 rounded"
+                                                data-bs-toggle="modal"
+                                                th:data-bs-target="'#editTodoModal-' + ${todo.id}">
+                                                Bearbeiten
+                                            </button>
+                                            <form th:action="@{/markTodoAsCompleted}" method="post">
+                                                <input type="hidden" name="todoId" th:value="${todo.id}">
+                                                <button type="submit" class="btn btn-success">Als abgeschlossen
+                                                    markieren</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="accordion mt-3" id="subTodoAccordion-${todo.id}">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="subTodoHeading-${todo.id}">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#subTodoCollapse-${todo.id}" aria-expanded="true"
+                                                    aria-controls="subTodoCollapse-${todo.id}">
+                                                    Sub-To-Dos anzeigen
+                                                </button>
+                                            </h2>
+                                            <div id="subTodoCollapse-${todo.id}" class="accordion-collapse collapse"
+                                                aria-labelledby="subTodoHeading-${todo.id}"
+                                                data-bs-parent="#subTodoAccordion-${todo.id}">
+                                                <div class="accordion-body">
+                                                    <ul class="list-group">
+                                                        <li th:each="subTodo : ${todoListEntry.value}"
+                                                            th:if="${todo.todoListId eq todoListEntry.key.id and subTodo.todoId eq todo.id}"
+                                                            class="list-group-item">
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-center">
+                                                                <div>
+                                                                    <div class="fw-bold" th:text="${subTodo.name}">
+                                                                    </div>
+                                                                    <div class="fw-bold"
+                                                                        th:text="${subTodo.description}"></div>
+                                                                    <div class="text-muted"
+                                                                        th:text="${subTodo.dueDate}"></div>
+                                                                </div>
+                                                                <div class="btn-group" role="group"
+                                                                    aria-label="SubTodo Actions">
+                                                                    <form th:action="@{/deleteTodo}" method="post">
+                                                                        <input type="hidden" name="todoId"
+                                                                            th:value="${subTodo.id}">
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger me-2">Löschen</button>
+                                                                    </form>
+                                                                    <button type="button"
+                                                                        class="btn btn-warning me-2 rounded"
+                                                                        data-bs-toggle="modal"
+                                                                        th:data-bs-target="'#editTodoModal-' + ${subTodo.id}">
+                                                                        Bearbeiten
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                th:data-bs-target="'#createTodoModal-' + ${listIndex.index}">
+                                Neues To-Do hinzufügen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                <div class="container mt-4 completed-todos">
+                    <ul class="list-group">
+                        <li th:each="todo : ${finishedTodos}"
+                            class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold" th:text="${todo.name}"></div>
+                                <div class="fw-bold" th:text="${todo.description}"></div>
+                                <div class="text-muted" th:text="${todo.dueDate}"></div>
+                            </div>
+                            <div class="btn-group" role="group" aria-label="Todo Actions">
+                                <form th:action="@{/deleteTodo}" method="post">
+                                    <input type="hidden" name="todoId" th:value="${todo.id}">
+                                    <button type="submit" class="btn btn-danger me-2">Löschen</button>
+                                </form>
+                                <form th:action="@{/markTodoAsNotCompleted}" method="post">
+                                    <input type="hidden" name="todoId" th:value="${todo.id}">
+                                    <button type="submit" class="btn btn-warning">Als nicht abgeschlossen
+                                        markieren</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="createTodoListModal" tabindex="-1" aria-labelledby="createTodoListModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createTodoListModalLabel">Neue To-Do-Liste erstellen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/createTodoList" method="post">
+                            <div class="mb-3">
+                                <label for="todoListName" class="form-label">Name der To-Do-Liste</label>
+                                <input type="text" class="form-control" id="todoListName" name="todoListName">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Erstellen</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div class="modal fade" th:id="'createTodoModal-' + ${listIndex.index}" tabindex="-1"
+                aria-labelledby="createTodoModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createTodoModalLabel">Neues To-Do hinzufügen</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/createTodo}" method="post">
+                                <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Beschreibung</label>
+                                    <textarea class="form-control" id="description" name="description"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="dueDate" class="form-label">Fälligkeitsdatum</label>
+                                    <input type="date" class="form-control" id="dueDate" name="dueDate"
+                                        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reminderDate" class="form-label">Erinnerungsdatum</label>
+                                    <input type="date" class="form-control" id="reminderDate" name="reminderDate"
+                                        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Erstellen</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
+                <div class=" modal fade" th:id="'createSubTodoModal-' + ${listIndex.index}" tabindex="-1"
+                    aria-labelledby="createSubTodoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createSubTodoModalLabel">Neues Sub-To-Do
+                                    hinzufügen
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/createSubTodo}" method="post">
+                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <input type="hidden" name="todoId" th:value="${todo.id}">
+                                    <div class="mb-3">
+                                        <label for="subTodoName" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="subTodoName" name="name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subTodoDescription" class="form-label">Beschreibung</label>
+                                        <textarea class="form-control" id="subTodoDescription"
+                                            name="description"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subTodoDueDate" class="form-label">Fälligkeitsdatum</label>
+                                        <input type="date" class="form-control" id="subTodoDueDate" name="dueDate"
+                                            th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subTodoReminderDate" class="form-label">Erinnerungsdatum</label>
+                                        <input type="date" class="form-control" id="subTodoReminderDate"
+                                            name="reminderDate"
+                                            th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Erstellen</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
+                <div class="modal fade" th:id="'editTodoModal-' + ${todo.id}" tabindex="-1"
+                    aria-labelledby="editTodoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editTodoModalLabel">To-Do bearbeiten</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/createTodo}" method="post">
+                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <div class="mb-3">
+                                        <label for="editName" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="editName" th:value="${todo.name}"
+                                            name="name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editDescription" class="form-label">Beschreibung</label>
+                                        <input type="text" class="form-control" id="editDescription"
+                                            th:value="${todo.description}" name="description">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editDueDate" class="form-label">Fälligkeitsdatum</label>
+                                        <input type="date" class="form-control" id="editDueDate"
+                                            th:value="${#temporals.format(todo.dueDate.getDate(), 'yyyy-MM-dd')}"
+                                            name="dueDate">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editReminderDate" class="form-label">Erinnerungsdatum</label>
+                                        <input type="date" class="form-control" id="reminderDate" name="reminderDate"
+                                            th:value="${#temporals.format(todo.reminderDate.getDate(), 'yyyy-MM-dd')}">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div th:each="subTodo : ${todoListEntry.value}" th:if="${subTodo.todoListId eq todoListEntry.key.id}">
+                <div class="modal fade" th:id="'editSubTodoModal-' + ${subTodo.id}" tabindex="-1"
+                    aria-labelledby="editSubTodoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editSubTodoModalLabel">Sub-To-Do bearbeiten</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/createSubTodo}" method="post">
+                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <input type="hidden" name="todoId" th:value="${subTodo.id}">
+                                    <div class="mb-3">
+                                        <label for="editSubTodoName" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="editSubTodoName"
+                                            th:value="${subTodo.name}" name="name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editSubTodoDescription" class="form-label">Beschreibung</label>
+                                        <input type="text" class="form-control" id="editSubTodoDescription"
+                                            th:value="${subTodo.description}" name="description">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editSubTodoDueDate" class="form-label">Fälligkeitsdatum</label>
+                                        <input type="date" class="form-control" id="editSubTodoDueDate"
+                                            th:value="${#temporals.format(subTodo.dueDate.getDate(), 'yyyy-MM-dd')}"
+                                            name="dueDate">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editSubTodoReminderDate" class="form-label">Erinnerungsdatum</label>
+                                        <input type="date" class="form-control" id="editSubTodoReminderDate"
+                                            name="reminderDate"
+                                            th:value="${#temporals.format(subTodo.reminderDate.getDate(), 'yyyy-MM-dd')}">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function loadTodos() {
+            $.get("/todos", function (data) {
+                $('#open').html(data.openTodosHtml);
+                $('#completed').html(data.completedTodosHtml);
+            });
+        }
+
+        function createTodo(formData) {
+            $.post("/createTodo", formData, function () {
+                loadTodos();
+            });
+        }
+
+        function deleteTodo(todoId) {
+            $.post("/deleteTodo", {todoId: todoId}, function () {
+                loadTodos();
+            });
+        }
+
+        function editTodo(formData) {
+            $.post("/editTodo", formData, function () {
+                loadTodos();
+            });
+        }
+
+        $(document).ready(function () {
+            loadTodos();
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
