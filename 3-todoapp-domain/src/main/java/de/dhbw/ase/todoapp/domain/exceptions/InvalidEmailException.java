@@ -5,6 +5,6 @@ public class InvalidEmailException extends RuntimeException
 {
     public InvalidEmailException()
     {
-        super("The password that was provided is invalid.");
+        super("The e-mail that was provided is invalid.");
     }
 }

@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-import de.dhbw.ase.todoapp.domain.exceptions.SubTaskNotAssignedToTaskException;
-import de.dhbw.ase.todoapp.domain.exceptions.TaskNotAssignedToTaskListException;
+import de.dhbw.ase.todoapp.domain.exceptions.SubTodoNotAssignedToTodoException;
+import de.dhbw.ase.todoapp.domain.exceptions.TodoNotAssignedToTodoListException;
 import de.dhbw.ase.todoapp.domain.vo.CalendarDate;
 import de.dhbw.ase.todoapp.domain.vo.Description;
 import de.dhbw.ase.todoapp.domain.vo.Name;
@@ -19,18 +19,18 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "t_task")
-public class Task
+@Table(name = "t_todo")
+public class Todo
 {
     @Id
     @Column
     private UUID id;
 
     @Column
-    private UUID taskListId;
+    private UUID todoListId;
 
     @Column
-    private UUID taskId;
+    private UUID todoId;
 
     @Embedded
     private Name name;
@@ -55,22 +55,22 @@ public class Task
     @Column(name = "completion_date")
     private LocalDate completionDate;
 
-    protected Task()
+    protected Todo()
     {
         // default constructor for JPA
     }
 
 
-    public Task(final UUID taskListId,
+    public Todo(final UUID todoListId,
                 final Name name,
                 final Description description,
                 final CalendarDate dueDate,
                 final CalendarDate reminder,
                 final boolean done)
     {
-        if (taskListId == null)
+        if (todoListId == null)
         {
-            throw new TaskNotAssignedToTaskListException();
+            throw new TodoNotAssignedToTodoListException();
         }
         Objects.requireNonNull(name);
         Objects.requireNonNull(description);
@@ -79,7 +79,7 @@ public class Task
         Objects.requireNonNull(done);
 
         this.id = UUID.randomUUID();
-        this.taskListId = taskListId;
+        this.todoListId = todoListId;
         this.name = name;
         this.dueDate = dueDate;
         this.description = description;
@@ -89,7 +89,7 @@ public class Task
     }
 
 
-    public Task(final UUID taskListId,
+    public Todo(final UUID todoListId,
                 final UUID taskId,
                 final Name name,
                 final Description description,
@@ -97,13 +97,13 @@ public class Task
                 final CalendarDate reminder,
                 final boolean done)
     {
-        if (taskListId == null)
+        if (todoListId == null)
         {
-            throw new TaskNotAssignedToTaskListException();
+            throw new TodoNotAssignedToTodoListException();
         }
         if (taskId == null)
         {
-            throw new SubTaskNotAssignedToTaskException();
+            throw new SubTodoNotAssignedToTodoException();
         }
         Objects.requireNonNull(name);
         Objects.requireNonNull(description);
@@ -112,8 +112,8 @@ public class Task
         Objects.requireNonNull(done);
 
         this.id = UUID.randomUUID();
-        this.taskListId = taskListId;
-        this.taskId = taskId;
+        this.todoListId = todoListId;
+        this.todoId = taskId;
         this.name = name;
         this.dueDate = dueDate;
         this.description = description;
@@ -129,15 +129,15 @@ public class Task
     }
 
 
-    public UUID getTaskListId()
+    public UUID getTodoListId()
     {
-        return taskListId;
+        return todoListId;
     }
 
 
-    public UUID getTaskId()
+    public UUID getTodoId()
     {
-        return taskId;
+        return todoId;
     }
 
 
@@ -183,14 +183,14 @@ public class Task
     }
 
 
-    public void setTaskAsFinished()
+    public void setAsFinished()
     {
         this.done = true;
         this.completionDate = LocalDate.now();
     }
 
 
-    public void setTaskAsNotFinished()
+    public void setAsNotFinished()
     {
         this.done = false;
         this.completionDate = null;

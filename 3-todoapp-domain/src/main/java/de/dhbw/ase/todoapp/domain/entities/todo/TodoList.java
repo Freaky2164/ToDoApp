@@ -1,6 +1,8 @@
 package de.dhbw.ase.todoapp.domain.entities.todo;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,12 +11,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "t_task_list")
-public class TaskList
+@Table(name = "t_todo_list")
+public class TodoList
 {
     @Id
     @Column
@@ -26,13 +29,16 @@ public class TaskList
     @Embedded
     private Name name;
 
-    protected TaskList()
+    @OneToMany(mappedBy = "todoListId")
+    private List<Todo> todos;
+
+    protected TodoList()
     {
         // default constructor for JPA
     }
 
 
-    public TaskList(final UUID userId, final Name name)
+    public TodoList(final UUID userId, final Name name)
     {
         Objects.requireNonNull(userId);
         Objects.requireNonNull(name);
@@ -40,6 +46,7 @@ public class TaskList
         this.id = UUID.randomUUID();
         this.userId = userId;
         this.name = name;
+        this.todos = new ArrayList<>();
     }
 
 
@@ -65,5 +72,24 @@ public class TaskList
     {
         Objects.requireNonNull(name);
         this.name = name;
+    }
+
+
+    public List<Todo> getTodos()
+    {
+        return todos;
+    }
+
+
+    public void addTodo(Todo todo)
+    {
+        Objects.requireNonNull(todo);
+        this.todos.add(todo);
+    }
+
+
+    public void removeTodo(Todo todo)
+    {
+        this.todos.remove(todo);
     }
 }
