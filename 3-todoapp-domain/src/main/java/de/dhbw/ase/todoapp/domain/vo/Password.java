@@ -1,9 +1,11 @@
 package de.dhbw.ase.todoapp.domain.vo;
 
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Objects;
-
-import org.apache.commons.lang3.Validate;
 
 import de.dhbw.ase.todoapp.domain.exceptions.InvalidPasswordException;
 import jakarta.persistence.Column;
@@ -14,42 +16,97 @@ import jakarta.persistence.Embeddable;
 public final class Password
 {
     @Column
-    private final String passwordValue;
+    private final byte[] password;
+
+    @Column
+    private final byte[] salt;
 
     protected Password()
     {
         // default constructor for JPA
-        this.passwordValue = "";
+        this.password = null;
+        this.salt = null;
     }
 
 
-    public Password(final String passwordValue)
+    public Password(final String password)
     {
-        Validate.notBlank(passwordValue);
-        if (!isValid(passwordValue))
+        Objects.requireNonNull(password);
+        if (!isValid(password))
         {
             throw new InvalidPasswordException();
         }
-        this.passwordValue = passwordValue;
+        this.salt = generateSalt();
+        this.password = hashPassword(password, salt);
     }
 
 
-    private boolean isValid(final String passwordValue)
+    public Password(final String password, final byte[] salt)
     {
-        return passwordValue.matches("[a-zA-Z0-9]*") && passwordValue.length() >= 8;
+        Objects.requireNonNull(password);
+        Objects.requireNonNull(salt);
+        if (!isValid(password))
+        {
+            throw new InvalidPasswordException();
+        }
+        this.salt = salt;
+        this.password = hashPassword(password, salt);
     }
 
 
-    public String getPassword()
+    private boolean isValid(String password)
     {
-        return passwordValue;
+        return password.matches("[a-zA-Z0-9]*") && password.length() >= 8;
+    }
+
+
+    private byte[] hashPassword(String password, byte[] salt)
+    {
+        try
+        {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.reset();
+            digest.update(salt);
+            byte[] hashedPassword = digest.digest(password.getBytes());
+            return hashedPassword;
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
+
+
+    private byte[] generateSalt()
+    {
+        byte[] salt = new byte[16];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(salt);
+        return salt;
+    }
+
+
+    public byte[] getPassword()
+    {
+        return password;
+    }
+
+
+    public byte[] getSalt()
+    {
+        return salt;
     }
 
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(passwordValue);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(password);
+        result = prime * result + Arrays.hashCode(salt);
+        return result;
     }
 
 
@@ -60,6 +117,6 @@ public final class Password
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         Password other = (Password)obj;
-        return Objects.equals(passwordValue, other.passwordValue);
+        return Arrays.equals(password, other.password) && Arrays.equals(salt, other.salt);
     }
 }
