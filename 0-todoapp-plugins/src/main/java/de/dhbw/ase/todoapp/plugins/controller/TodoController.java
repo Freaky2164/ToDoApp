@@ -2,10 +2,7 @@ package de.dhbw.ase.todoapp.plugins.controller;
 
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,16 +41,11 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Map<TodoList, List<Todo>> todoMap = new LinkedHashMap<>();
-        List<Todo> finishedTodos = new ArrayList<>();
         User user = userService.findUserById(userId);
-        for (TodoList todoList : todoService.findTodoListsForUser(user))
-        {
-            todoMap.put(todoList, todoService.findNotFinishedTodosForUser(user));
-        }
-        finishedTodos = todoService.findFinishedTodosForUser(user);
+        List<TodoList> todoLists = todoService.findTodoListsForUser(user);
+        List<Todo> finishedTodos = todoService.findFinishedTodosForUser(user);
 
-        model.addAttribute("todoMap", todoMap);
+        model.addAttribute("todoLists", todoLists);
         model.addAttribute("finishedTodos", finishedTodos);
         return "todo";
     }

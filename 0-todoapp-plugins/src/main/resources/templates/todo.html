@@ -64,19 +64,19 @@
                         Neue To-Do-Liste erstellen
                     </button>
                 </div>
-                <div th:each="todoListEntry, listIndex: ${todoMap}">
+                <div th:each="todoList : ${todoLists}">
                     <div class="card mt-3">
                         <div class="card-header d-flex justify-content-between">
-                            <h2 class="card-title fw-bold" th:text="${todoListEntry.key.name}"></h2>
+                            <h2 class="card-title fw-bold" th:text="${todoList.name}"></h2>
                             <form th:action="@{/deleteTodoList}" method="post">
-                                <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                <input type="hidden" name="todoListId" th:value="${todoList.id}">
                                 <button type="submit" class="btn btn-danger">Liste löschen</button>
                             </form>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
-                                <li th:each="todo : ${todoListEntry.value}"
-                                    th:if="${todo.todoListId eq todoListEntry.key.id and todo.todoId == null}"
+                                <li th:each="todo : ${todoList.todos}"
+                                    th:if="${todo.todoListId eq todoList.id and todo.todoId == null and !todo.done}"
                                     class="list-group-item">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
@@ -85,8 +85,8 @@
                                             <div class="text-muted" th:text="${todo.dueDate}"></div>
                                         </div>
                                         <div class="btn-group" role="group" aria-label="Sub Todo">
-                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                                th:data-bs-target="'#createSubTodoModal-' + ${listIndex.index}">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                th:data-bs-target="'#createSubTodoModal-' + ${todoList.id}">
                                                 Neues Sub-To-Do hinzufügen
                                             </button>
                                         </div>
@@ -121,8 +121,8 @@
                                                 data-bs-parent="#subTodoAccordion-${todo.id}">
                                                 <div class="accordion-body">
                                                     <ul class="list-group">
-                                                        <li th:each="subTodo : ${todoListEntry.value}"
-                                                            th:if="${todo.todoListId eq todoListEntry.key.id and subTodo.todoId eq todo.id}"
+                                                        <li th:each="subTodo : ${todoList.todos}"
+                                                            th:if="${todo.todoListId eq todoList.id and subTodo.todoId eq todo.id}"
                                                             class="list-group-item">
                                                             <div
                                                                 class="d-flex justify-content-between align-items-center">
@@ -161,7 +161,7 @@
                         </div>
                         <div class="card-footer">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                th:data-bs-target="'#createTodoModal-' + ${listIndex.index}">
+                                th:data-bs-target="'#createTodoModal-' + ${todoList.id}">
                                 Neues To-Do hinzufügen
                             </button>
                         </div>
@@ -217,8 +217,8 @@
             </div>
         </div>
 
-        <div th:each="todoListEntry, listIndex: ${todoMap}">
-            <div class="modal fade" th:id="'createTodoModal-' + ${listIndex.index}" tabindex="-1"
+        <div th:each="todoList : ${todoLists}">
+            <div class="modal fade" th:id="'createTodoModal-' + ${todoList.id}" tabindex="-1"
                 aria-labelledby="createTodoModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -228,7 +228,7 @@
                         </div>
                         <div class="modal-body">
                             <form th:action="@{/createTodo}" method="post">
-                                <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                <input type="hidden" name="todoListId" th:value="${todoList.id}">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="name" name="name">
@@ -255,9 +255,9 @@
             </div>
         </div>
 
-        <div th:each="todoListEntry, listIndex: ${todoMap}">
-            <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
-                <div class=" modal fade" th:id="'createSubTodoModal-' + ${listIndex.index}" tabindex="-1"
+        <div th:each="todoList : ${todoLists}">
+            <div th:each="todo : ${todoList.todos}" th:if="${todo.todoListId eq todoList.id}">
+                <div class=" modal fade" th:id="'createSubTodoModal-' + ${todoList.id}" tabindex="-1"
                     aria-labelledby="createSubTodoModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -270,7 +270,7 @@
                             </div>
                             <div class="modal-body">
                                 <form th:action="@{/createSubTodo}" method="post">
-                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <input type="hidden" name="todoListId" th:value="${todoList.id}">
                                     <input type="hidden" name="todoId" th:value="${todo.id}">
                                     <div class="mb-3">
                                         <label for="subTodoName" class="form-label">Name</label>
@@ -301,8 +301,8 @@
             </div>
         </div>
 
-        <div th:each="todoListEntry, listIndex: ${todoMap}">
-            <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
+        <div th:each="todoList : ${todoLists}">
+            <div th:each="todo : ${todoList.todos}" th:if="${todo.todoListId eq todoList.id}">
                 <div class="modal fade" th:id="'editTodoModal-' + ${todo.id}" tabindex="-1"
                     aria-labelledby="editTodoModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -314,7 +314,7 @@
                             </div>
                             <div class="modal-body">
                                 <form th:action="@{/createTodo}" method="post">
-                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <input type="hidden" name="todoListId" th:value="${todoList.id}">
                                     <div class="mb-3">
                                         <label for="editName" class="form-label">Name</label>
                                         <input type="text" class="form-control" id="editName" th:value="${todo.name}"
@@ -345,8 +345,8 @@
             </div>
         </div>
 
-        <div th:each="todoListEntry, listIndex: ${todoMap}">
-            <div th:each="subTodo : ${todoListEntry.value}" th:if="${subTodo.todoListId eq todoListEntry.key.id}">
+        <div th:each="todoList : ${todoLists}">
+            <div th:each="subTodo : ${todoList.todos}" th:if="${subTodo.todoListId eq todoList.id}">
                 <div class="modal fade" th:id="'editSubTodoModal-' + ${subTodo.id}" tabindex="-1"
                     aria-labelledby="editSubTodoModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -358,7 +358,7 @@
                             </div>
                             <div class="modal-body">
                                 <form th:action="@{/createSubTodo}" method="post">
-                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <input type="hidden" name="todoListId" th:value="${todoList.id}">
                                     <input type="hidden" name="todoId" th:value="${subTodo.id}">
                                     <div class="mb-3">
                                         <label for="editSubTodoName" class="form-label">Name</label>
@@ -391,38 +391,6 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function loadTodos() {
-            $.get("/todos", function (data) {
-                $('#open').html(data.openTodosHtml);
-                $('#completed').html(data.completedTodosHtml);
-            });
-        }
-
-        function createTodo(formData) {
-            $.post("/createTodo", formData, function () {
-                loadTodos();
-            });
-        }
-
-        function deleteTodo(todoId) {
-            $.post("/deleteTodo", {todoId: todoId}, function () {
-                loadTodos();
-            });
-        }
-
-        function editTodo(formData) {
-            $.post("/editTodo", formData, function () {
-                loadTodos();
-            });
-        }
-
-        $(document).ready(function () {
-            loadTodos();
-        });
-    </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
