@@ -14,5 +14,4 @@ import de.dhbw.ase.todoapp.domain.vo.Email;
 public interface SpringDataUserRepository extends JpaRepository<User, UUID>
 {
     User findUserByMail(final Email mail);
-
 }

@@ -18,7 +18,6 @@ import de.dhbw.ase.todoapp.domain.vo.Name;
 
 public class TodoListRepositoryBridgeTest
 {
-
     private TodoListRepositoryBridge todoListRepositoryBridge;
     private SpringDataTodoListRepository springDataTodoListRepository;
 

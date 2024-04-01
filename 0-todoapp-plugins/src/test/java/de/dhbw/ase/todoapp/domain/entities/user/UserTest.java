@@ -12,7 +12,6 @@ import de.dhbw.ase.todoapp.domain.vo.Password;
 
 public class UserTest
 {
-
     private Email email;
     private Password password;
 

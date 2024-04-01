@@ -16,7 +16,6 @@ import de.dhbw.ase.todoapp.domain.vo.Name;
 @Repository
 public class TodoRepositoryBridge implements TodoRepository
 {
-
     @Autowired
     SpringDataTodoRepository springDataTodoRepository;
 
@@ -28,9 +27,9 @@ public class TodoRepositoryBridge implements TodoRepository
 
 
     @Override
-    public Optional<Todo> findByTodoId(UUID todoId)
+    public Optional<Todo> findByTodoId(UUID subTodoId)
     {
-        return springDataTodoRepository.findByTodoId(todoId);
+        return springDataTodoRepository.findByTodoId(subTodoId);
     }
 
 

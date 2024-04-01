@@ -18,7 +18,6 @@ import de.dhbw.ase.todoapp.domain.vo.Name;
 
 public class TodoTest
 {
-
     private UUID todoListId;
     private Name name;
     private Description description;

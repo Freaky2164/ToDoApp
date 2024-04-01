@@ -10,7 +10,6 @@ import de.dhbw.ase.todoapp.domain.exceptions.InvalidEmailException;
 
 public class EmailTest
 {
-
     @Test
     public void testValidEmail()
     {

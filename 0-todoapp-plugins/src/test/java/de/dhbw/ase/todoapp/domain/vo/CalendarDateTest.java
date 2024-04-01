@@ -13,7 +13,6 @@ import de.dhbw.ase.todoapp.domain.exceptions.PastDateException;
 
 public class CalendarDateTest
 {
-
     @Test
     public void testValidFutureDate()
     {

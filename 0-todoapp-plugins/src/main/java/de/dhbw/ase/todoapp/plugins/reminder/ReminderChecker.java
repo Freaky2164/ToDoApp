@@ -45,7 +45,7 @@ public class ReminderChecker
             {
                 if (todo.getDueDate().getDate().isAfter(todo.getReminderDate().getDate()))
                 {
-                    for (Notification notification : notificationService.findNotificationByUserId(user.getId()))
+                    for (Notification notification : notificationService.findAllForUser(user))
                     {
                         notification.notify("Das To-Do \\\"" + todo.getName() + "\\\" wurde nicht zum eingetragenen Datum, dem "
                                             + todo.getDueDate().formatDate() + ", abgeschlossen!");

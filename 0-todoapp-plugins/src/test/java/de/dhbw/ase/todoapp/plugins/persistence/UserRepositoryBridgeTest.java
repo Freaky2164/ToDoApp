@@ -19,7 +19,6 @@ import de.dhbw.ase.todoapp.domain.vo.Email;
 
 public class UserRepositoryBridgeTest
 {
-
     private SpringDataUserRepository springDataUserRepositoryMock;
     private UserRepositoryBridge userRepositoryBridge;
 
@@ -40,7 +39,7 @@ public class UserRepositoryBridgeTest
 
         when(springDataUserRepositoryMock.findById(userId)).thenReturn(Optional.of(expectedUser));
 
-        User actualUser = userRepositoryBridge.findUserById(userId);
+        User actualUser = userRepositoryBridge.findById(userId);
 
         assertEquals(expectedUser, actualUser);
     }
@@ -54,7 +53,7 @@ public class UserRepositoryBridgeTest
 
         when(springDataUserRepositoryMock.findUserByMail(email)).thenReturn(expectedUser);
 
-        User actualUser = userRepositoryBridge.findUserByMail(email);
+        User actualUser = userRepositoryBridge.findByMail(email);
 
         assertEquals(expectedUser, actualUser);
     }
@@ -69,7 +68,7 @@ public class UserRepositoryBridgeTest
 
         when(springDataUserRepositoryMock.findAll()).thenReturn(expectedUsers);
 
-        List<User> actualUsers = userRepositoryBridge.findAllUsers();
+        List<User> actualUsers = userRepositoryBridge.findAll();
 
         assertEquals(expectedUsers, actualUsers);
     }

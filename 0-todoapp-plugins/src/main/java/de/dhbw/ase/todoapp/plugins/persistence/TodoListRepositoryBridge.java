@@ -16,7 +16,6 @@ import de.dhbw.ase.todoapp.domain.vo.Name;
 @Repository
 public class TodoListRepositoryBridge implements TodoListRepository
 {
-
     @Autowired
     SpringDataTodoListRepository springDataTodoListRepository;
 

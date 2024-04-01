@@ -47,7 +47,7 @@ public class TodoServiceTest
 
         when(todoListRepository.findById(id)).thenReturn(Optional.of(expected));
 
-        Optional<TodoList> result = todoService.findTodoList(id);
+        Optional<TodoList> result = todoService.findTodoListById(id);
 
         assertTrue(result.isPresent());
         assertEquals(expected, result.get());

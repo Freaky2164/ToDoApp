@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class LoginController
 {
-
     @Autowired
     UserService userService;
 

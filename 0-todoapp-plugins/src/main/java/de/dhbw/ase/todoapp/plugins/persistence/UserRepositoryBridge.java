@@ -16,12 +16,11 @@ import de.dhbw.ase.todoapp.domain.vo.Email;
 @Repository
 public class UserRepositoryBridge implements UserRepository
 {
-
     @Autowired
     SpringDataUserRepository springDataUserRepository;
 
     @Override
-    public User findUserById(UUID userId)
+    public User findById(UUID userId)
     {
         Optional<User> optionalUser = springDataUserRepository.findById(userId);
         return optionalUser.isPresent() ? optionalUser.get() : null;
@@ -29,14 +28,14 @@ public class UserRepositoryBridge implements UserRepository
 
 
     @Override
-    public User findUserByMail(Email mail)
+    public User findByMail(Email mail)
     {
         return springDataUserRepository.findUserByMail(mail);
     }
 
 
     @Override
-    public List<User> findAllUsers()
+    public List<User> findAll()
     {
         return springDataUserRepository.findAll();
     }

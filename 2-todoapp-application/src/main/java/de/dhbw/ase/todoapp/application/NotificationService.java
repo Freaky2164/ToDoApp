@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
 import de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository;
+import de.dhbw.ase.todoapp.domain.entities.user.User;
 
 
 @Service
@@ -24,15 +25,15 @@ public class NotificationService
     }
 
 
-    public Optional<Notification> findNotificationById(UUID notificationId)
+    public Optional<Notification> findById(UUID notificationId)
     {
-        return notificationRepository.findNotificationById(notificationId);
+        return notificationRepository.findById(notificationId);
     }
 
 
-    public List<Notification> findNotificationByUserId(UUID userId)
+    public List<Notification> findAllForUser(User user)
     {
-        return notificationRepository.findNotificationsByUserId(userId);
+        return notificationRepository.findAllByUserId(user.getId());
     }
 
 

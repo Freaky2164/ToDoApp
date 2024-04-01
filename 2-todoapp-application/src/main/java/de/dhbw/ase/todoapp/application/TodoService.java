@@ -31,13 +31,13 @@ public class TodoService
     }
 
 
-    public Optional<TodoList> findTodoList(UUID todoListId)
+    public Optional<TodoList> findTodoListById(UUID todoListId)
     {
         return todoListRepository.findById(todoListId);
     }
 
 
-    public Optional<TodoList> findTodoList(Name name)
+    public Optional<TodoList> findTodoListByName(Name name)
     {
         return todoListRepository.findByName(name);
     }
@@ -69,7 +69,7 @@ public class TodoService
     }
 
 
-    public Optional<Todo> findTodoBy(UUID todoId)
+    public Optional<Todo> findTodoById(UUID todoId)
     {
         return todoRepository.findById(todoId);
     }

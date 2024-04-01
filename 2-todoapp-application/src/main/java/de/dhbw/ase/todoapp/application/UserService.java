@@ -29,19 +29,19 @@ public class UserService
 
     public User findUserById(final UUID userId)
     {
-        return userRepository.findUserById(userId);
+        return userRepository.findById(userId);
     }
 
 
     public User findUserByMail(final String mailAdress)
     {
-        return userRepository.findUserByMail(new Email(mailAdress));
+        return userRepository.findByMail(new Email(mailAdress));
     }
 
 
     public List<User> findAllUsers()
     {
-        return userRepository.findAllUsers();
+        return userRepository.findAll();
     }
 
 
@@ -51,7 +51,7 @@ public class UserService
         {
             throw new InvalidLoginException("Mail adress or password cannot be empty.");
         }
-        if (userRepository.findUserByMail(new Email(mailAdress)) != null)
+        if (userRepository.findByMail(new Email(mailAdress)) != null)
         {
             throw new InvalidLoginException("There already exists a user with the provided mail adress.");
         }
@@ -62,7 +62,7 @@ public class UserService
 
     public UUID authenticateUser(final String mailAdress, final String password)
     {
-        User user = userRepository.findUserByMail(new Email(mailAdress));
+        User user = userRepository.findByMail(new Email(mailAdress));
         if (user != null)
         {
             Password storedPassword = new Password(password, user.getPassword().getSalt());

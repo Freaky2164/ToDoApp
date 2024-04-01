@@ -14,7 +14,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("de.dhbw.ase.todoapp.domain.*")
 public class ToDoApplication
 {
-
     public static void main(String[] args)
     {
         System.setProperty("user.timezone", "UTC");

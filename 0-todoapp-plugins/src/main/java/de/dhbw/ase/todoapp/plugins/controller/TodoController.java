@@ -62,7 +62,7 @@ public class TodoController
             todoMap.put(todoList, todoService.findNotFinishedTodosForUser(user));
         }
         List<Todo> finishedTodos = todoService.findFinishedTodosForUser(user);
-        List<Notification> notifications = notificationService.findNotificationByUserId(userId);
+        List<Notification> notifications = notificationService.findAllForUser(user);
 
         model.addAttribute("todoMap", todoMap);
         model.addAttribute("finishedTodos", finishedTodos);
@@ -96,7 +96,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<TodoList> todoListOptional = todoService.findTodoList(todoListId);
+        Optional<TodoList> todoListOptional = todoService.findTodoListById(todoListId);
         todoListOptional.ifPresent(todoList ->
         {
             todoService.deleteTodoList(todoList);
@@ -115,7 +115,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<TodoList> todoListOptional = todoService.findTodoList(todoListId);
+        Optional<TodoList> todoListOptional = todoService.findTodoListById(todoListId);
         todoListOptional.ifPresent(todoList ->
         {
             Name oldName = todoList.getName();
@@ -152,7 +152,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<Todo> todoOptional = todoService.findTodoBy(todoId);
+        Optional<Todo> todoOptional = todoService.findTodoById(todoId);
         todoOptional.ifPresent(todo ->
         {
             todoService.deleteTodo(todo);
@@ -172,7 +172,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<Todo> optionalTodo = todoService.findTodoBy(todoId);
+        Optional<Todo> optionalTodo = todoService.findTodoById(todoId);
         optionalTodo.ifPresent(todo ->
         {
             todo.setName(new Name(name));
@@ -195,7 +195,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<Todo> todoOptional = todoService.findTodoBy(todoId);
+        Optional<Todo> todoOptional = todoService.findTodoById(todoId);
         todoOptional.ifPresent(todo ->
         {
             todoService.setTodoAsFinished(todo);
@@ -216,7 +216,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<Todo> todoOptional = todoService.findTodoBy(todoId);
+        Optional<Todo> todoOptional = todoService.findTodoById(todoId);
         todoOptional.ifPresent(todo ->
         {
             todoService.setTodoAsNotFinished(todo);
@@ -268,7 +268,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<Notification> notificationOptional = notificationService.findNotificationById(notificationId);
+        Optional<Notification> notificationOptional = notificationService.findById(notificationId);
         notificationOptional.ifPresent(notification ->
         {
             notificationService.deleteNotification(notification);
@@ -287,7 +287,7 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Optional<Notification> notificationOptional = notificationService.findNotificationById(notificationId);
+        Optional<Notification> notificationOptional = notificationService.findById(notificationId);
         notificationOptional.ifPresent(notification ->
         {
             notification.setName(new Name(name));

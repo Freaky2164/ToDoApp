@@ -15,7 +15,6 @@ import de.dhbw.ase.todoapp.domain.vo.Name;
 @Repository
 public interface SpringDataTodoListRepository extends JpaRepository<TodoList, UUID>
 {
-
     Optional<TodoList> findByName(final Name name);
 
 

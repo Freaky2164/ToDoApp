@@ -219,11 +219,4 @@ public class Todo
         this.done = false;
         this.completionDate = null;
     }
-
-
-    @Override
-    public String toString()
-    {
-        return "Todo [name=" + name + ", description=" + description + ", dueDate=" + dueDate + ", reminderDate=" + reminderDate + "]";
-    }
 }

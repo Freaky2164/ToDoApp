@@ -19,7 +19,6 @@ import de.dhbw.ase.todoapp.domain.vo.Name;
 
 public class NotificationRepositoryBridgeTest
 {
-
     private SpringDataNotificationRepository springDataNotificationRepository;
     private NotificationRepositoryBridge notificationRepositoryBridge;
 
@@ -38,7 +37,7 @@ public class NotificationRepositoryBridgeTest
         Notification notification = new Notification(UUID.randomUUID(), new Name("Test Notification"), "http://example.com");
         Mockito.when(springDataNotificationRepository.findById(notification.getId())).thenReturn(Optional.of(notification));
 
-        Optional<Notification> result = notificationRepositoryBridge.findNotificationById(notification.getId());
+        Optional<Notification> result = notificationRepositoryBridge.findById(notification.getId());
 
         assertTrue(result.isPresent());
         assertEquals(notification, result.get());
@@ -56,7 +55,7 @@ public class NotificationRepositoryBridgeTest
         notifications.add(notification2);
         Mockito.when(springDataNotificationRepository.findAllByUserId(userId)).thenReturn(notifications);
 
-        List<Notification> result = notificationRepositoryBridge.findNotificationsByUserId(userId);
+        List<Notification> result = notificationRepositoryBridge.findAllByUserId(userId);
 
         assertEquals(notifications.size(), result.size());
         assertTrue(result.contains(notification1));

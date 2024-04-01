@@ -10,7 +10,6 @@ import de.dhbw.ase.todoapp.domain.vo.Name;
 
 public class NotificationTest
 {
-
     @Test(expected = NullPointerException.class)
     public void testConstructor_NullUserId()
     {

@@ -15,19 +15,18 @@ import de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository;
 @Repository
 public class NotificationRepositoryBridge implements NotificationRepository
 {
-
     @Autowired
     SpringDataNotificationRepository springDataNotificationRepository;
 
     @Override
-    public Optional<Notification> findNotificationById(UUID notificationId)
+    public Optional<Notification> findById(UUID notificationId)
     {
         return springDataNotificationRepository.findById(notificationId);
     }
 
 
     @Override
-    public List<Notification> findNotificationsByUserId(UUID userId)
+    public List<Notification> findAllByUserId(UUID userId)
     {
         return springDataNotificationRepository.findAllByUserId(userId);
     }

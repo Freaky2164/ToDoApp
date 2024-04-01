@@ -9,13 +9,13 @@ import de.dhbw.ase.todoapp.domain.vo.Email;
 
 public interface UserRepository
 {
-    public User findUserById(final UUID userId);
+    public User findById(final UUID userId);
 
 
-    public User findUserByMail(final Email mail);
+    public User findByMail(final Email mail);
 
 
-    public List<User> findAllUsers();
+    public List<User> findAll();
 
 
     public User createUser(final User user);

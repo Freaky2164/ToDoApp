@@ -19,7 +19,6 @@ import de.dhbw.ase.todoapp.domain.vo.Password;
 
 public class UserServiceTest
 {
-
     private UserService userService;
     private UserRepository mockUserRepository;
 
@@ -36,7 +35,7 @@ public class UserServiceTest
     {
         User mockUser = UserFactory.createUser("test@example.com", "Password123");
         UUID mockUserId = mockUser.getId();
-        when(mockUserRepository.findUserById(mockUserId)).thenReturn(mockUser);
+        when(mockUserRepository.findById(mockUserId)).thenReturn(mockUser);
 
         User foundUser = userService.findUserById(mockUserId);
         assertNotNull(foundUser);
@@ -51,7 +50,7 @@ public class UserServiceTest
     {
         String mailAddress = "test@example.com";
         User mockUser = UserFactory.createUser(mailAddress, "Password123");
-        when(mockUserRepository.findUserByMail(any())).thenReturn(mockUser);
+        when(mockUserRepository.findByMail(any())).thenReturn(mockUser);
 
         User foundUser = userService.findUserByMail(mailAddress);
         assertNotNull(foundUser);
@@ -64,7 +63,7 @@ public class UserServiceTest
     public void testRegisterUser()
     {
         User mockUser = UserFactory.createUser("test@example.com", "Password123");
-        when(mockUserRepository.findUserByMail(any())).thenReturn(null);
+        when(mockUserRepository.findByMail(any())).thenReturn(null);
         when(mockUserRepository.createUser(any())).thenReturn(mockUser);
 
         User registeredUser = userService.registerUser("test@example.com", "Password123");
@@ -92,7 +91,7 @@ public class UserServiceTest
     @Test(expected = InvalidLoginException.class)
     public void testRegisterUserWithExistingMail()
     {
-        when(mockUserRepository.findUserByMail(any())).thenReturn(UserFactory.createUser("test@example.com", "Password123"));
+        when(mockUserRepository.findByMail(any())).thenReturn(UserFactory.createUser("test@example.com", "Password123"));
         userService.registerUser("test@example.com", "Password123");
     }
 
@@ -103,7 +102,7 @@ public class UserServiceTest
         String mailAddress = "test@example.com";
         String password = "Password123";
         User mockUser = UserFactory.createUser(mailAddress, password);
-        when(mockUserRepository.findUserByMail(any())).thenReturn(mockUser);
+        when(mockUserRepository.findByMail(any())).thenReturn(mockUser);
 
         UUID authenticatedUserId = userService.authenticateUser(mailAddress, password);
         assertEquals(mockUser.getId(), authenticatedUserId);
@@ -115,7 +114,7 @@ public class UserServiceTest
     {
         String mailAddress = "test@example.com";
         String password = "Password123";
-        when(mockUserRepository.findUserByMail(any())).thenReturn(UserFactory.createUser("test@example.com", "TestPassword"));
+        when(mockUserRepository.findByMail(any())).thenReturn(UserFactory.createUser("test@example.com", "TestPassword"));
 
         UUID authenticatedUserId = userService.authenticateUser(mailAddress, password);
         assertNull(authenticatedUserId);
@@ -127,7 +126,7 @@ public class UserServiceTest
     {
         String mailAddress = "test@example.com";
         String password = "Password123";
-        when(mockUserRepository.findUserByMail(any())).thenReturn(null);
+        when(mockUserRepository.findByMail(any())).thenReturn(null);
 
         UUID authenticatedUserId = userService.authenticateUser(mailAddress, password);
         assertNull(authenticatedUserId);

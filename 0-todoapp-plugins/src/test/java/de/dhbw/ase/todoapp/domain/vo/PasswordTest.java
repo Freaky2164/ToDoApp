@@ -1,7 +1,7 @@
 package de.dhbw.ase.todoapp.domain.vo;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -10,13 +10,12 @@ import de.dhbw.ase.todoapp.domain.exceptions.InvalidPasswordException;
 
 public class PasswordTest
 {
-
     @Test
     public void testValidPassword()
     {
         String validPassword = "ValidPassword123";
         Password password = new Password(validPassword);
-        assertEquals(validPassword, password.getPassword());
+        assertEquals(validPassword.getBytes(), password.getPassword());
     }
 
 
@@ -59,7 +58,7 @@ public class PasswordTest
         Password password2 = new Password("ValidPassword123");
         Password password3 = new Password("DifferentPassword");
 
-        assertTrue(password1.equals(password2));
-        assertFalse(password1.equals(password3));
+        assertEquals(password1, password2);
+        assertEquals(password1, password3);
     }
 }

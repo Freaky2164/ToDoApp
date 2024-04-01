@@ -13,7 +13,7 @@ public interface TodoRepository
     Optional<Todo> findById(final UUID todoId);
 
 
-    Optional<Todo> findByTodoId(final UUID todoId);
+    Optional<Todo> findByTodoId(final UUID subTodoId);
 
 
     Optional<Todo> findByName(final Name name);

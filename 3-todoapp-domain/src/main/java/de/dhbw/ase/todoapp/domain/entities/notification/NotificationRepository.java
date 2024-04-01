@@ -8,11 +8,10 @@ import java.util.UUID;
 
 public interface NotificationRepository
 {
+    Optional<Notification> findById(UUID notificationId);
 
-    Optional<Notification> findNotificationById(UUID notificationId);
 
-
-    List<Notification> findNotificationsByUserId(UUID userId);
+    List<Notification> findAllByUserId(UUID userId);
 
 
     Notification save(Notification notification);

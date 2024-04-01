@@ -10,7 +10,6 @@ import de.dhbw.ase.todoapp.domain.vo.Password;
 
 public class UserFactoryTest
 {
-
     @Test
     public void testCreateUser()
     {
