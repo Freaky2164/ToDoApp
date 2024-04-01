@@ -1,6 +1,7 @@
 package de.dhbw.ase.todoapp.plugins.persistence;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +32,13 @@ public class UserRepositoryBridge implements UserRepository
     public User findUserByMail(Email mail)
     {
         return springDataUserRepository.findUserByMail(mail);
+    }
+
+
+    @Override
+    public List<User> findAllUsers()
+    {
+        return springDataUserRepository.findAll();
     }
 
 

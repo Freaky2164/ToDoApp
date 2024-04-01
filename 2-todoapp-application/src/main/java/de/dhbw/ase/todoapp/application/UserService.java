@@ -1,6 +1,7 @@
 package de.dhbw.ase.todoapp.application;
 
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,12 @@ public class UserService
     public User findUserByMail(final String mailAdress)
     {
         return userRepository.findUserByMail(new Email(mailAdress));
+    }
+
+
+    public List<User> findAllUsers()
+    {
+        return userRepository.findAllUsers();
     }
 
 
