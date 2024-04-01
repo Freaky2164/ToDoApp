@@ -147,9 +147,21 @@ public class Todo
     }
 
 
+    public void setName(Name name)
+    {
+        this.name = name;
+    }
+
+
     public Description getDescription()
     {
         return description;
+    }
+
+
+    public void setDescription(Description description)
+    {
+        this.description = description;
     }
 
 
@@ -159,9 +171,21 @@ public class Todo
     }
 
 
+    public void setDueDate(CalendarDate dueDate)
+    {
+        this.dueDate = dueDate;
+    }
+
+
     public CalendarDate getReminderDate()
     {
         return reminderDate;
+    }
+
+
+    public void setReminderDate(CalendarDate reminderDate)
+    {
+        this.reminderDate = reminderDate;
     }
 
 
@@ -194,5 +218,12 @@ public class Todo
     {
         this.done = false;
         this.completionDate = null;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return "Todo [name=" + name + ", description=" + description + ", dueDate=" + dueDate + ", reminderDate=" + reminderDate + "]";
     }
 }

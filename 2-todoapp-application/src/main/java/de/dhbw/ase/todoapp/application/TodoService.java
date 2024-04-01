@@ -75,12 +75,6 @@ public class TodoService
     }
 
 
-    public List<Todo> findTodosFromTodoList(UUID todoListId)
-    {
-        return todoRepository.findAllByTodoListId(todoListId);
-    }
-
-
     public List<Todo> findFinishedTodosForUser(User user)
     {
         List<Todo> finishedTodos = new ArrayList<>();
