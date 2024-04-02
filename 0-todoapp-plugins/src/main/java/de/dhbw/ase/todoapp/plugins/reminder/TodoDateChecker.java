@@ -1,6 +1,7 @@
 package de.dhbw.ase.todoapp.plugins.reminder;
 
 
+import java.time.LocalDate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +18,7 @@ import de.dhbw.ase.todoapp.domain.entities.user.User;
 
 
 @Service
-public class ReminderChecker
+public class TodoDateChecker
 {
     private static final int PERIODIC_DELAY_HOURS = 12;
 
@@ -30,20 +31,29 @@ public class ReminderChecker
     @Autowired
     NotificationService notificationService;
 
-    public ReminderChecker()
+    public TodoDateChecker()
     {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::checkReminder, 0, PERIODIC_DELAY_HOURS, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(this::checkTodoDates, 0, PERIODIC_DELAY_HOURS, TimeUnit.HOURS);
     }
 
 
-    public void checkReminder()
+    public void checkTodoDates()
     {
         for (User user : userService.findAllUsers())
         {
             for (Todo todo : todoService.findNotFinishedTodosForUser(user))
             {
-                if (todo.getDueDate().getDate().isAfter(todo.getReminderDate().getDate()))
+                LocalDate date = LocalDate.now();
+                if (date.isAfter(todo.getReminderDate().getDate()))
+                {
+                    for (Notification notification : notificationService.findAllForUser(user))
+                    {
+                        notification.notify("Erinnerung: Das To-Do \\\"" + todo.getName() + "\\\" muss bis zum "
+                                            + todo.getDueDate().formatDate() + " abgeschlossen werden!");
+                    }
+                }
+                if (date.isAfter(todo.getDueDate().getDate()))
                 {
                     for (Notification notification : notificationService.findAllForUser(user))
                     {
