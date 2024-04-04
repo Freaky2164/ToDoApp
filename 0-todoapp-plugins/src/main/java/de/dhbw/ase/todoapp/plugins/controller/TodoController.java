@@ -45,7 +45,7 @@ public class TodoController extends Observable
     NotificationService notificationService;
 
     @GetMapping("/todo")
-    public String renderTodoPage(Model model, HttpSession session)
+    public String renderTodoPage(HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -70,7 +70,7 @@ public class TodoController extends Observable
 
 
     @PostMapping("/createTodoList")
-    public String createTodoList(@RequestParam("todoListName") String todoListName, HttpSession session)
+    public String createTodoList(@RequestParam("todoListName") String todoListName, HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -86,7 +86,7 @@ public class TodoController extends Observable
 
 
     @PostMapping("/deleteTodoList")
-    public String deleteTodoList(@RequestParam("todoListId") UUID todoListId, HttpSession session)
+    public String deleteTodoList(@RequestParam("todoListId") UUID todoListId, HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -105,7 +105,8 @@ public class TodoController extends Observable
 
 
     @PostMapping("/renameTodoList")
-    public String renameTodoList(@RequestParam("todoListId") UUID todoListId, String newName, HttpSession session)
+    public String renameTodoList(@RequestParam("todoListId") UUID todoListId, @RequestParam("newName") String newName,
+                                 HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -125,8 +126,10 @@ public class TodoController extends Observable
 
 
     @PostMapping("/createTodo")
-    public String createTodo(@RequestParam("todoListId") UUID todoListId, HttpSession session, String name, String description,
-                             LocalDate dueDate, LocalDate reminderDate)
+    public String createTodo(@RequestParam("todoListId") UUID todoListId, @RequestParam("name") String name,
+                             @RequestParam("description") String description,
+                             @RequestParam("dueDate") LocalDate dueDate, @RequestParam("reminderDate") LocalDate reminderDate,
+                             HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -142,7 +145,7 @@ public class TodoController extends Observable
 
 
     @PostMapping("/deleteTodo")
-    public String deleteTodo(@RequestParam("todoId") UUID todoId, HttpSession session)
+    public String deleteTodo(@RequestParam("todoId") UUID todoId, HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -161,8 +164,10 @@ public class TodoController extends Observable
 
 
     @PostMapping("/editTodo")
-    public String editTodo(UUID todoId, HttpSession session, String name, String description,
-                           LocalDate dueDate, LocalDate reminderDate)
+    public String editTodo(@RequestParam("todoId") UUID todoId, @RequestParam("name") String name,
+                           @RequestParam("description") String description,
+                           @RequestParam("dueDate") LocalDate dueDate, @RequestParam("reminderDate") LocalDate reminderDate,
+                           HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -185,7 +190,7 @@ public class TodoController extends Observable
 
 
     @PostMapping("/markTodoAsCompleted")
-    public String markTodoAsCompleted(@RequestParam("todoId") UUID todoId, HttpSession session)
+    public String markTodoAsCompleted(@RequestParam("todoId") UUID todoId, HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -206,7 +211,7 @@ public class TodoController extends Observable
 
 
     @PostMapping("/markTodoAsNotCompleted")
-    public String markTodoAsNotCompleted(@RequestParam("todoId") UUID todoId, HttpSession session)
+    public String markTodoAsNotCompleted(@RequestParam("todoId") UUID todoId, HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -225,8 +230,10 @@ public class TodoController extends Observable
 
 
     @PostMapping("/createSubTodo")
-    public String createSubTodo(UUID todoListId, UUID todoId, HttpSession session, String name, String description,
-                                LocalDate dueDate, LocalDate reminderDate)
+    public String createSubTodo(@RequestParam("todoListId") UUID todoListId, @RequestParam("todoId") UUID todoId,
+                                @RequestParam("name") String name, @RequestParam("description") String description,
+                                @RequestParam("dueDate") LocalDate dueDate, @RequestParam("reminderDate") LocalDate reminderDate,
+                                HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -242,7 +249,8 @@ public class TodoController extends Observable
 
 
     @PostMapping("/createNotification")
-    public String createNotification(String name, String webHookUrl, HttpSession session)
+    public String createNotification(@RequestParam("name") String name, @RequestParam("webHookUrl") String webHookUrl,
+                                     HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -258,7 +266,7 @@ public class TodoController extends Observable
 
 
     @PostMapping("/deleteNotification")
-    public String deleteNotification(UUID notificationId, HttpSession session)
+    public String deleteNotification(@RequestParam("notificationId") UUID notificationId, HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
@@ -277,7 +285,8 @@ public class TodoController extends Observable
 
 
     @PostMapping("/editNotification")
-    public String editNotification(UUID notificationId, String name, String webHookUrl, HttpSession session)
+    public String editNotification(@RequestParam("notificationId") UUID notificationId, @RequestParam("name") String name,
+                                   @RequestParam("webHookUrl") String webHookUrl, HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)
