@@ -1,6 +1,8 @@
 package de.dhbw.ase.todoapp.plugins.reminder;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -11,7 +13,9 @@ import org.springframework.stereotype.Service;
 import de.dhbw.ase.todoapp.application.NotificationService;
 import de.dhbw.ase.todoapp.application.TodoService;
 import de.dhbw.ase.todoapp.application.UserService;
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
+import de.dhbw.ase.todoapp.domain.entities.notification.reminder.DueDateStrategy;
+import de.dhbw.ase.todoapp.domain.entities.notification.reminder.ReminderDateStrategy;
+import de.dhbw.ase.todoapp.domain.entities.notification.reminder.ReminderStrategy;
 import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
 import de.dhbw.ase.todoapp.domain.entities.user.User;
 
@@ -32,33 +36,28 @@ public class TodoDateChecker
 
     public TodoDateChecker()
     {
+        List<ReminderStrategy> reminderStrategies = getReminderStrategies();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::checkTodoDates, 0, PERIODIC_DELAY_HOURS, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(() -> checkTodoDates(reminderStrategies), 0, PERIODIC_DELAY_HOURS, TimeUnit.HOURS);
     }
 
 
-    public void checkTodoDates()
+    private List<ReminderStrategy> getReminderStrategies()
+    {
+        List<ReminderStrategy> reminderStrategies = new ArrayList<>();
+        reminderStrategies.add(new DueDateStrategy());
+        reminderStrategies.add(new ReminderDateStrategy());
+        return reminderStrategies;
+    }
+
+
+    public void checkTodoDates(List<ReminderStrategy> reminderStrategies)
     {
         for (User user : userService.findAllUsers())
         {
             for (Todo todo : todoService.findNotFinishedTodosForUser(user))
             {
-                if (todo.hasReachedReminderDate())
-                {
-                    for (Notification notification : notificationService.findAllForUser(user))
-                    {
-                        notification.notify("Erinnerung: Das To-Do \\\"" + todo.getName() + "\\\" muss bis zum "
-                                            + todo.getDueDate().formatDate() + " abgeschlossen werden!");
-                    }
-                }
-                if (todo.hasReachedCompletionDate())
-                {
-                    for (Notification notification : notificationService.findAllForUser(user))
-                    {
-                        notification.notify("Das To-Do \\\"" + todo.getName() + "\\\" wurde nicht zum eingetragenen Datum, dem "
-                                            + todo.getDueDate().formatDate() + ", abgeschlossen!");
-                    }
-                }
+                reminderStrategies.forEach(reminderStrategy -> reminderStrategy.checkDate(todo, notificationService.findAllForUser(user)));
             }
         }
     }
