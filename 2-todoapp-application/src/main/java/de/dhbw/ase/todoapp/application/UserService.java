@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import de.dhbw.ase.todoapp.domain.entities.user.User;
 import de.dhbw.ase.todoapp.domain.entities.user.UserFactory;
 import de.dhbw.ase.todoapp.domain.entities.user.UserRepository;
-import de.dhbw.ase.todoapp.domain.exceptions.InvalidLoginException;
+import de.dhbw.ase.todoapp.domain.exceptions.UserAlreadyRegisteredException;
 import de.dhbw.ase.todoapp.domain.vo.Email;
 import de.dhbw.ase.todoapp.domain.vo.Password;
 
@@ -45,21 +45,6 @@ public class UserService
     }
 
 
-    public User registerUser(final String mailAdress, final String password)
-    {
-        if (mailAdress.isEmpty() || password.isEmpty())
-        {
-            throw new InvalidLoginException("Mail adress or password cannot be empty.");
-        }
-        if (userRepository.findByMail(new Email(mailAdress)) != null)
-        {
-            throw new InvalidLoginException("There already exists a user with the provided mail adress.");
-        }
-        User newUser = UserFactory.createUser(mailAdress, password);
-        return userRepository.createUser(newUser);
-    }
-
-
     public UUID authenticateUser(final String mailAdress, final String password)
     {
         User user = userRepository.findByMail(new Email(mailAdress));
@@ -69,5 +54,17 @@ public class UserService
             return storedPassword.equals(user.getPassword()) ? user.getId() : null;
         }
         return null;
+    }
+
+
+    public User registerUser(final String mailAdress, final String password)
+        throws UserAlreadyRegisteredException
+    {
+        if (userRepository.findByMail(new Email(mailAdress)) != null)
+        {
+            throw new UserAlreadyRegisteredException(mailAdress);
+        }
+        User newUser = UserFactory.createUser(mailAdress, password);
+        return userRepository.createUser(newUser);
     }
 }

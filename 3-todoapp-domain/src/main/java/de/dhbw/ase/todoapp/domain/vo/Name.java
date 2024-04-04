@@ -3,8 +3,7 @@ package de.dhbw.ase.todoapp.domain.vo;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.Validate;
-
+import de.dhbw.ase.todoapp.domain.exceptions.InvalidNameException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -24,7 +23,10 @@ public final class Name
 
     public Name(final String nameValue)
     {
-        Validate.notBlank(nameValue);
+        if (nameValue == null || nameValue.isBlank())
+        {
+            throw new InvalidNameException();
+        }
         this.nameValue = nameValue;
     }
 
