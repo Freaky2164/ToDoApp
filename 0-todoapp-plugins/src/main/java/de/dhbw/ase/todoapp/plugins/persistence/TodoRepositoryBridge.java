@@ -59,4 +59,11 @@ public class TodoRepositoryBridge implements TodoRepository
     {
         springDataTodoRepository.delete(todo);
     }
+
+
+    @Override
+    public List<Todo> findAllSubTodoByTodoId(UUID todoId)
+    {
+        return springDataTodoRepository.findAllByTodoId(todoId);
+    }
 }

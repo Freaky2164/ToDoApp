@@ -58,6 +58,8 @@ public class TodoService
 
     public void deleteTodoList(TodoList list)
     {
+        List<Todo> todos = todoRepository.findAllByTodoListId(list.getId());
+        todos.forEach(todoRepository::delete);
         todoListRepository.delete(list);
     }
 
@@ -72,6 +74,12 @@ public class TodoService
     public Optional<Todo> findTodoById(UUID todoId)
     {
         return todoRepository.findById(todoId);
+    }
+
+
+    public List<Todo> findTodosFromTodoList(UUID todoListId)
+    {
+        return todoRepository.findAllByTodoListId(todoListId);
     }
 
 
@@ -117,6 +125,8 @@ public class TodoService
 
     public void deleteTodo(Todo todo)
     {
+        List<Todo> subTodos = todoRepository.findAllSubTodoByTodoId(todo.getId());
+        subTodos.forEach(todoRepository::delete);
         todoRepository.delete(todo);
     }
 

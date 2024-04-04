@@ -22,4 +22,7 @@ public interface SpringDataTodoRepository extends JpaRepository<Todo, UUID>
 
 
     List<Todo> findAllByTodoListId(UUID todoListId);
+
+
+    List<Todo> findAllByTodoId(UUID todoId);
 }
