@@ -8,13 +8,11 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.Test;
 
-import de.dhbw.ase.todoapp.domain.exceptions.PastDateException;
-
 
 public class CalendarDateTest
 {
     @Test
-    public void testValidFutureDate()
+    public void testValidDate()
     {
         LocalDate futureDate = LocalDate.now().plusDays(1);
         CalendarDate calendarDate = new CalendarDate(futureDate);
@@ -26,14 +24,6 @@ public class CalendarDateTest
     public void testNullDate()
     {
         new CalendarDate(null);
-    }
-
-
-    @Test(expected = PastDateException.class)
-    public void testPastDate()
-    {
-        LocalDate pastDate = LocalDate.now().minusDays(1);
-        new CalendarDate(pastDate);
     }
 
 

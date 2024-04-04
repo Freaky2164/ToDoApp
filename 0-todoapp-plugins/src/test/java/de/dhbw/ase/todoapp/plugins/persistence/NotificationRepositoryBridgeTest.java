@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 
 import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
 import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.vo.WebHook;
 
 
 public class NotificationRepositoryBridgeTest
@@ -34,7 +35,8 @@ public class NotificationRepositoryBridgeTest
     @Test
     public void testFindNotificationById()
     {
-        Notification notification = new Notification(UUID.randomUUID(), new Name("Test Notification"), "http://example.com");
+        Notification notification = new Notification(UUID.randomUUID(), new Name("Test Notification"), new WebHook(
+                                                                                                                   "https://discord.com/api/webhooks/"));
         Mockito.when(springDataNotificationRepository.findById(notification.getId())).thenReturn(Optional.of(notification));
 
         Optional<Notification> result = notificationRepositoryBridge.findById(notification.getId());
@@ -48,8 +50,8 @@ public class NotificationRepositoryBridgeTest
     public void testFindNotificationsByUserId()
     {
         UUID userId = UUID.randomUUID();
-        Notification notification1 = new Notification(userId, new Name("Test Notification 1"), "http://example.com");
-        Notification notification2 = new Notification(userId, new Name("Test Notification 2"), "http://example.com");
+        Notification notification1 = new Notification(userId, new Name("Test Notification 1"), new WebHook("https://discord.com/api/webhooks/"));
+        Notification notification2 = new Notification(userId, new Name("Test Notification 2"), new WebHook("https://discord.com/api/webhooks/"));
         List<Notification> notifications = new ArrayList<>();
         notifications.add(notification1);
         notifications.add(notification2);
@@ -66,7 +68,7 @@ public class NotificationRepositoryBridgeTest
     @Test
     public void testSave()
     {
-        Notification notification = new Notification(UUID.randomUUID(), new Name("Test Notification"), "http://example.com");
+        Notification notification = new Notification(UUID.randomUUID(), new Name("Test Notification"), new WebHook("https://discord.com/api/webhooks/"));
         Mockito.when(springDataNotificationRepository.save(notification)).thenReturn(notification);
 
         Notification savedNotification = notificationRepositoryBridge.save(notification);
@@ -78,7 +80,7 @@ public class NotificationRepositoryBridgeTest
     @Test
     public void testDelete()
     {
-        Notification notification = new Notification(UUID.randomUUID(), new Name("Test Notification"), "http://example.com");
+        Notification notification = new Notification(UUID.randomUUID(), new Name("Test Notification"), new WebHook("https://discord.com/api/webhooks/"));
 
         notificationRepositoryBridge.delete(notification);
 

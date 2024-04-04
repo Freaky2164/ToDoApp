@@ -3,8 +3,6 @@ package de.dhbw.ase.todoapp.domain.vo;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.Validate;
-
 import de.dhbw.ase.todoapp.domain.exceptions.DescriptionTooLongException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -25,8 +23,7 @@ public final class Description
 
     public Description(final String descriptionText)
     {
-        Validate.notBlank(descriptionText);
-        if (descriptionText.length() > 250)
+        if (descriptionText != null && descriptionText.length() > 250)
         {
             throw new DescriptionTooLongException();
         }

@@ -4,8 +4,6 @@ package de.dhbw.ase.todoapp.domain.vo;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.Validate;
-
 import de.dhbw.ase.todoapp.domain.exceptions.InvalidEmailException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -28,7 +26,7 @@ public final class Email
 
     public Email(final String mailAdress)
     {
-        Validate.notBlank(mailAdress);
+        Objects.requireNonNull(mailAdress);
         if (!isValid(mailAdress))
         {
             throw new InvalidEmailException();

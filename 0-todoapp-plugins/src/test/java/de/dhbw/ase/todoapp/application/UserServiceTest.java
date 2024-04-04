@@ -13,7 +13,9 @@ import org.junit.Test;
 import de.dhbw.ase.todoapp.domain.entities.user.User;
 import de.dhbw.ase.todoapp.domain.entities.user.UserFactory;
 import de.dhbw.ase.todoapp.domain.entities.user.UserRepository;
-import de.dhbw.ase.todoapp.domain.exceptions.InvalidLoginException;
+import de.dhbw.ase.todoapp.domain.exceptions.InvalidEmailException;
+import de.dhbw.ase.todoapp.domain.exceptions.InvalidPasswordException;
+import de.dhbw.ase.todoapp.domain.exceptions.UserAlreadyRegisteredException;
 import de.dhbw.ase.todoapp.domain.vo.Password;
 
 
@@ -74,21 +76,21 @@ public class UserServiceTest
     }
 
 
-    @Test(expected = InvalidLoginException.class)
+    @Test(expected = InvalidEmailException.class)
     public void testRegisterUserWithEmptyMail()
     {
         userService.registerUser("", "Password123");
     }
 
 
-    @Test(expected = InvalidLoginException.class)
+    @Test(expected = InvalidPasswordException.class)
     public void testRegisterUserWithEmptyPassword()
     {
         userService.registerUser("test@example.com", "");
     }
 
 
-    @Test(expected = InvalidLoginException.class)
+    @Test(expected = UserAlreadyRegisteredException.class)
     public void testRegisterUserWithExistingMail()
     {
         when(mockUserRepository.findByMail(any())).thenReturn(UserFactory.createUser("test@example.com", "Password123"));

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-import de.dhbw.ase.todoapp.domain.exceptions.PastDateException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -26,18 +25,7 @@ public final class CalendarDate
     public CalendarDate(final LocalDate date)
     {
         Objects.requireNonNull(date);
-        if (!this.isFutureDate(date))
-        {
-            throw new PastDateException();
-        }
         this.date = date;
-    }
-
-
-    private boolean isFutureDate(final LocalDate date)
-    {
-        LocalDate currentDate = LocalDate.now().minusDays(1);
-        return date.isAfter(currentDate);
     }
 
 

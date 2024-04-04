@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import de.dhbw.ase.todoapp.domain.exceptions.InvalidNameException;
+
 
 public class NameTest
 {
@@ -13,11 +15,11 @@ public class NameTest
     {
         String validName = "John Doe";
         Name name = new Name(validName);
-        assertEquals(validName, name.getName());
+        assertEquals(validName, name.getValue());
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = InvalidNameException.class)
     public void testBlankName()
     {
         String blankName = "";
@@ -25,7 +27,7 @@ public class NameTest
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = InvalidNameException.class)
     public void testNullName()
     {
         String nullName = null;
@@ -42,7 +44,7 @@ public class NameTest
         String newName = "New Name";
         Name changedName = name.changeName(newName);
 
-        assertEquals(newName, changedName.getName());
+        assertEquals(newName, changedName.getValue());
     }
 
 

@@ -19,7 +19,7 @@ public class EmailTest
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = InvalidEmailException.class)
     public void testBlankEmail()
     {
         String blankEmail = "";

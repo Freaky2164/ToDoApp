@@ -24,7 +24,7 @@ public class TodoFactoryTest
 
         assertNotNull(todoList);
         assertEquals(todoListId, todoList.getTodoListId());
-        assertEquals(name, todoList.getName().getName());
+        assertEquals(name, todoList.getName().getValue());
         assertEquals(description, todoList.getDescription().getDescription());
         assertEquals(dueDate, todoList.getDueDate().getDate());
         assertEquals(reminderDate, todoList.getReminderDate().getDate());
@@ -47,7 +47,7 @@ public class TodoFactoryTest
         assertNotNull(subTodo);
         assertEquals(todoListId, subTodo.getTodoListId());
         assertEquals(todoId, subTodo.getTodoId());
-        assertEquals(name, subTodo.getName().getName());
+        assertEquals(name, subTodo.getName().getValue());
         assertEquals(description, subTodo.getDescription().getDescription());
         assertEquals(dueDate, subTodo.getDueDate().getDate());
         assertEquals(reminderDate, subTodo.getReminderDate().getDate());

@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import de.dhbw.ase.todoapp.domain.exceptions.DescriptionTooLongException;
+
 
 public class DescriptionTest
 {
@@ -17,19 +19,14 @@ public class DescriptionTest
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testBlankDescription()
-    {
-        String blankDescription = "";
-        new Description(blankDescription);
-    }
-
-
-    @Test(expected = NullPointerException.class)
+    @Test(expected = DescriptionTooLongException.class)
     public void testNullDescription()
     {
-        String nullDescription = null;
-        new Description(nullDescription);
+        String tooLongDescription = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
+                                 + "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, "
+                                 + "sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, "
+                                 + "no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum";
+        new Description(tooLongDescription);
     }
 
 

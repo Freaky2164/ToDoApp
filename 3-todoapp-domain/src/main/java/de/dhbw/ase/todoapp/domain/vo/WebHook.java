@@ -48,9 +48,9 @@ public class WebHook
     }
 
 
-    public Description changeUrl(final String url)
+    public WebHook changeUrl(final String url)
     {
-        return new Description(url);
+        return new WebHook(url);
     }
 
 
