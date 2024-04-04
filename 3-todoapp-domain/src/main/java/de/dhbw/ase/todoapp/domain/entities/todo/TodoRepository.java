@@ -22,6 +22,9 @@ public interface TodoRepository
     List<Todo> findAllByTodoListId(final UUID todoListId);
 
 
+    List<Todo> findAllSubTodoByTodoId(UUID id);
+
+
     Todo save(final Todo todo);
 
 

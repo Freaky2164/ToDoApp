@@ -13,7 +13,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public final class CalendarDate
 {
-    @Column
+    @Column(name = "date", nullable = false)
     private final LocalDate date;
 
     protected CalendarDate()

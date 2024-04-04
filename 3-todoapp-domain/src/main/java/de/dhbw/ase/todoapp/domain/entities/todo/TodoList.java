@@ -17,10 +17,10 @@ import jakarta.persistence.Table;
 public class TodoList
 {
     @Id
-    @Column
+    @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column
+    @Column(name = "userId", nullable = false)
     private UUID userId;
 
     @Embedded

@@ -15,10 +15,10 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public final class Password
 {
-    @Column
+    @Column(name = "password", nullable = false)
     private final byte[] password;
 
-    @Column
+    @Column(name = "salt", nullable = false)
     private final byte[] salt;
 
     protected Password()

@@ -12,7 +12,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public final class Name
 {
-    @Column
+    @Column(name = "nameValue", nullable = false)
     private final String nameValue;
 
     protected Name()
@@ -29,7 +29,7 @@ public final class Name
     }
 
 
-    public String getName()
+    public String getValue()
     {
         return nameValue;
     }

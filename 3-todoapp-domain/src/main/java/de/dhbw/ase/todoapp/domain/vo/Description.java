@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.Validate;
 
+import de.dhbw.ase.todoapp.domain.exceptions.DescriptionTooLongException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -12,7 +13,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public final class Description
 {
-    @Column
+    @Column(name = "descriptionText")
     private final String descriptionText;
 
     protected Description()
@@ -25,6 +26,10 @@ public final class Description
     public Description(final String descriptionText)
     {
         Validate.notBlank(descriptionText);
+        if (descriptionText.length() > 250)
+        {
+            throw new DescriptionTooLongException();
+        }
         this.descriptionText = descriptionText;
     }
 

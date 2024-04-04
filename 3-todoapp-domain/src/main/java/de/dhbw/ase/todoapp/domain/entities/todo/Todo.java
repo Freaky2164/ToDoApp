@@ -23,13 +23,13 @@ import jakarta.persistence.Table;
 public class Todo
 {
     @Id
-    @Column
+    @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column
+    @Column(name = "todoListId", nullable = false)
     private UUID todoListId;
 
-    @Column
+    @Column(name = "todoId", nullable = false)
     private UUID todoId;
 
     @Embedded
@@ -46,7 +46,7 @@ public class Todo
     @AttributeOverride(name = "date", column = @Column(name = "reminder_date"))
     private CalendarDate reminderDate;
 
-    @Column(name = "done")
+    @Column(name = "done", nullable = false)
     private boolean done;
 
     @Column(name = "creation_date")
@@ -73,7 +73,6 @@ public class Todo
             throw new TodoNotAssignedToTodoListException();
         }
         Objects.requireNonNull(name);
-        Objects.requireNonNull(description);
         Objects.requireNonNull(dueDate);
         Objects.requireNonNull(reminder);
         Objects.requireNonNull(done);
@@ -106,7 +105,6 @@ public class Todo
             throw new SubTodoNotAssignedToTodoException();
         }
         Objects.requireNonNull(name);
-        Objects.requireNonNull(description);
         Objects.requireNonNull(dueDate);
         Objects.requireNonNull(reminder);
         Objects.requireNonNull(done);
@@ -204,6 +202,18 @@ public class Todo
     public LocalDate getCompletionDate()
     {
         return completionDate;
+    }
+
+
+    public boolean hasReachedReminderDate()
+    {
+        return reminderDate.isPastDate();
+    }
+
+
+    public boolean hasReachedCompletionDate()
+    {
+        return dueDate.isPastDate();
     }
 
 

@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 public class User
 {
     @Id
-    @Column
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @Embedded
