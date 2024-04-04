@@ -8,9 +8,9 @@ import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.apache.commons.lang3.Validate;
-
+import de.dhbw.ase.todoapp.abstraction.observer.TodoObserver;
 import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.vo.WebHook;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -20,20 +20,20 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "t_notification")
-public class Notification implements Observer
+public class Notification implements TodoObserver
 {
     @Id
-    @Column
+    @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column
+    @Column(name = "userId", nullable = false)
     private UUID userId;
 
     @Embedded
     private Name name;
 
-    @Column
-    private String webHookUrl;
+    @Embedded
+    private WebHook webHook;
 
     protected Notification()
     {
@@ -41,16 +41,16 @@ public class Notification implements Observer
     }
 
 
-    public Notification(final UUID userId, final Name name, final String webHookUrl)
+    public Notification(final UUID userId, final Name name, final WebHook webHook)
     {
         Objects.requireNonNull(userId);
         Objects.requireNonNull(name);
-        Validate.notBlank(webHookUrl);
+        Objects.requireNonNull(webHook);
 
         this.id = UUID.randomUUID();
         this.userId = userId;
         this.name = name;
-        this.webHookUrl = webHookUrl;
+        this.webHook = webHook;
     }
 
 
@@ -72,21 +72,21 @@ public class Notification implements Observer
     }
 
 
-    public void setName(Name name)
+    public void changeName(Name name)
     {
         this.name = name;
     }
 
 
-    public String getWebHookUrl()
+    public WebHook getWebHookUrl()
     {
-        return webHookUrl;
+        return webHook;
     }
 
 
-    public void setWebHookUrl(String webHookUrl)
+    public void setWebHook(WebHook webHook)
     {
-        this.webHookUrl = webHookUrl;
+        this.webHook = webHook;
     }
 
 
@@ -95,7 +95,7 @@ public class Notification implements Observer
     {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                                         .uri(URI.create(webHookUrl))
+                                         .uri(URI.create(webHook.getUrl()))
                                          .header("Content-Type", "application/json")
                                          .POST(HttpRequest.BodyPublishers.ofString("{ \"content\": \"" + message + "\" }"))
                                          .build();

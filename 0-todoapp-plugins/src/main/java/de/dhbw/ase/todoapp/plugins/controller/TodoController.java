@@ -3,7 +3,6 @@ package de.dhbw.ase.todoapp.plugins.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.dhbw.ase.todoapp.abstraction.observer.Observable;
 import de.dhbw.ase.todoapp.application.NotificationService;
 import de.dhbw.ase.todoapp.application.TodoService;
 import de.dhbw.ase.todoapp.application.UserService;
 import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
-import de.dhbw.ase.todoapp.domain.entities.notification.Observer;
 import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
 import de.dhbw.ase.todoapp.domain.entities.todo.TodoFactory;
 import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
@@ -29,14 +28,13 @@ import de.dhbw.ase.todoapp.domain.entities.user.User;
 import de.dhbw.ase.todoapp.domain.vo.CalendarDate;
 import de.dhbw.ase.todoapp.domain.vo.Description;
 import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.vo.WebHook;
 import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-public class TodoController
+public class TodoController extends Observable
 {
-    private List<Observer> todoObservers = new ArrayList<>();
-
     @Autowired
     TodoService todoService;
 
@@ -252,9 +250,9 @@ public class TodoController
             return "redirect:/login";
         }
 
-        Notification notification = new Notification(userId, new Name(name), webHookUrl);
+        Notification notification = new Notification(userId, new Name(name), new WebHook(webHookUrl));
         notificationService.createNotification(notification);
-        todoObservers.add(notification);
+        registerObserver(notification);
         return "redirect:/todo";
     }
 
@@ -272,7 +270,7 @@ public class TodoController
         notificationOptional.ifPresent(notification ->
         {
             notificationService.deleteNotification(notification);
-            todoObservers.remove(notification);
+            unregisterObserver(notification);
         });
         return "redirect:/todo";
     }
@@ -290,19 +288,10 @@ public class TodoController
         Optional<Notification> notificationOptional = notificationService.findById(notificationId);
         notificationOptional.ifPresent(notification ->
         {
-            notification.setName(new Name(name));
-            notification.setWebHookUrl(webHookUrl);
+            notification.changeName(new Name(name));
+            notification.setWebHook(new WebHook(webHookUrl));
             notificationService.createNotification(notification);
         });
         return "redirect:/todo";
-    }
-
-
-    private void notifyObservers(String message)
-    {
-        for (Observer observer : todoObservers)
-        {
-            observer.notify(message);
-        }
     }
 }
