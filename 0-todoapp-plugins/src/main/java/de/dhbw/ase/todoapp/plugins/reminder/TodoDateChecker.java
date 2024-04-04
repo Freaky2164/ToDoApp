@@ -1,7 +1,6 @@
 package de.dhbw.ase.todoapp.plugins.reminder;
 
 
-import java.time.LocalDate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -44,8 +43,7 @@ public class TodoDateChecker
         {
             for (Todo todo : todoService.findNotFinishedTodosForUser(user))
             {
-                LocalDate date = LocalDate.now();
-                if (date.isAfter(todo.getReminderDate().getDate()))
+                if (todo.hasReachedReminderDate())
                 {
                     for (Notification notification : notificationService.findAllForUser(user))
                     {
@@ -53,7 +51,7 @@ public class TodoDateChecker
                                             + todo.getDueDate().formatDate() + " abgeschlossen werden!");
                     }
                 }
-                if (date.isAfter(todo.getDueDate().getDate()))
+                if (todo.hasReachedCompletionDate())
                 {
                     for (Notification notification : notificationService.findAllForUser(user))
                     {
