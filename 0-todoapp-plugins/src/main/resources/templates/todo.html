@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>To-Do App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -256,14 +257,17 @@
                         <h5 class="modal-title" id="addNotificationModalLabel">Neue Benachrichtigung hinzufügen</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div th:if="${error}" class="error-message">
+                        <p th:text="${error}" style="color: red;"></p>
+                    </div>
                     <div class="modal-body">
                         <form th:action="@{/createNotification}" method="post">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name">
+                                <input type="text" class="form-control" id="name" name="name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="webHookUrl" class="form-label">WebHook-URL</label>
+                                <label for="webHookUrl" class="form-label">Discord-WebHook-URL</label>
                                 <input type="text" class="form-control" id="webHookUrl" name="webHookUrl" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Hinzufügen</button>
@@ -288,7 +292,7 @@
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        th:value="${notification.name}">
+                                        th:value="${notification.name}" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="webHookUrl" class="form-label">WebHook-URL</label>
@@ -315,7 +319,7 @@
                         <form action="/createTodoList" method="post">
                             <div class="mb-3">
                                 <label for="todoListName" class="form-label">Name der To-Do-Liste</label>
-                                <input type="text" class="form-control" id="todoListName" name="todoListName">
+                                <input type="text" class="form-control" id="todoListName" name="todoListName" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Erstellen</button>
                         </form>
@@ -323,105 +327,61 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div th:each="todoListEntry, listIndex: ${todoMap}">
-        <div class="modal fade" id="renameTodoListModal" tabindex="-1" aria-labelledby="renameTodoListModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="renameTodoListModalLabel">To-Do-Liste umbenennen</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="/renameTodoList" method="post">
-                            <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
-                            <div class="mb-3">
-                                <label for="newName" class="form-label">Neuer Name der To-Do-Liste</label>
-                                <input type="text" class="form-control" id="newName" name="newName"
-                                    th:value="${todoListEntry.key.name}">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Umbenennen</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div th:each="todoListEntry, listIndex: ${todoMap}">
-        <div class="modal fade" th:id="'createTodoModal-' + ${todoListEntry.key.id}" tabindex="-1"
-            aria-labelledby="createTodoModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createTodoModalLabel">Neues To-Do hinzufügen</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form th:action="@{/createTodo}" method="post">
-                            <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Beschreibung</label>
-                                <textarea class="form-control" id="description" name="description"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="dueDate" class="form-label">Fälligkeitsdatum</label>
-                                <input type="date" class="form-control" id="dueDate" name="dueDate"
-                                    th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="reminderDate" class="form-label">Erinnerungsdatum</label>
-                                <input type="date" class="form-control" id="reminderDate" name="reminderDate"
-                                    th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Erstellen</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div th:each="todoListEntry, listIndex: ${todoMap}">
-        <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
-            <div class=" modal fade" th:id="'createSubTodoModal-' + ${todoListEntry.key.id}" tabindex="-1"
-                aria-labelledby="createSubTodoModalLabel" aria-hidden="true">
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div class="modal fade" id="renameTodoListModal" tabindex="-1" aria-labelledby="renameTodoListModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="createSubTodoModalLabel">Neues Sub-To-Do
-                                hinzufügen
-                            </h5>
+                            <h5 class="modal-title" id="renameTodoListModalLabel">To-Do-Liste umbenennen</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form th:action="@{/createSubTodo}" method="post">
+                            <form action="/renameTodoList" method="post">
                                 <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
-                                <input type="hidden" name="todoId" th:value="${todo.id}">
                                 <div class="mb-3">
-                                    <label for="subTodoName" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="subTodoName" name="name">
+                                    <label for="newName" class="form-label">Neuer Name der To-Do-Liste</label>
+                                    <input type="text" class="form-control" id="newName" name="newName"
+                                        th:value="${todoListEntry.key.name}" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Umbenennen</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div class="modal fade" th:id="'createTodoModal-' + ${todoListEntry.key.id}" tabindex="-1"
+                aria-labelledby="createTodoModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createTodoModalLabel">Neues To-Do hinzufügen</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/createTodo}" method="post">
+                                <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="subTodoDescription" class="form-label">Beschreibung</label>
-                                    <textarea class="form-control" id="subTodoDescription"
-                                        name="description"></textarea>
+                                    <label for="description" class="form-label">Beschreibung</label>
+                                    <textarea class="form-control" id="description" name="description"></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="subTodoDueDate" class="form-label">Fälligkeitsdatum</label>
-                                    <input type="date" class="form-control" id="subTodoDueDate" name="dueDate"
-                                        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                    <label for="dueDate" class="form-label">Fälligkeitsdatum</label>
+                                    <input type="date" class="form-control" id="dueDate" name="dueDate"
+                                        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="subTodoReminderDate" class="form-label">Erinnerungsdatum</label>
-                                    <input type="date" class="form-control" id="subTodoReminderDate" name="reminderDate"
-                                        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                    <label for="reminderDate" class="form-label">Erinnerungsdatum</label>
+                                    <input type="date" class="form-control" id="reminderDate" name="reminderDate"
+                                        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Erstellen</button>
                             </form>
@@ -430,97 +390,147 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div th:each="todoListEntry, listIndex: ${todoMap}">
-        <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
-            <div class="modal fade" th:id="'editTodoModal-' + ${todo.id}" tabindex="-1"
-                aria-labelledby="editTodoModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editTodoModalLabel">To-Do bearbeiten</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
+                <div class=" modal fade" th:id="'createSubTodoModal-' + ${todoListEntry.key.id}" tabindex="-1"
+                    aria-labelledby="createSubTodoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createSubTodoModalLabel">Neues Sub-To-Do
+                                    hinzufügen
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/createSubTodo}" method="post">
+                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <input type="hidden" name="todoId" th:value="${todo.id}">
+                                    <div class="mb-3">
+                                        <label for="subTodoName" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="subTodoName" name="name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subTodoDescription" class="form-label">Beschreibung</label>
+                                        <textarea class="form-control" id="subTodoDescription"
+                                            name="description"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subTodoDueDate" class="form-label">Fälligkeitsdatum</label>
+                                        <input type="date" class="form-control" id="subTodoDueDate" name="dueDate"
+                                            th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subTodoReminderDate" class="form-label">Erinnerungsdatum</label>
+                                        <input type="date" class="form-control" id="subTodoReminderDate"
+                                            name="reminderDate"
+                                            th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Erstellen</button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <form th:action="@{/editTodo}" method="post">
-                                <input type="hidden" name="todoId" th:value="${todo.id}">
-                                <div class="mb-3">
-                                    <label for="editName" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="editName" th:value="${todo.name}"
-                                        name="name">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editDescription" class="form-label">Beschreibung</label>
-                                    <input type="text" class="form-control" id="editDescription"
-                                        th:value="${todo.description}" name="description">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editDueDate" class="form-label">Fälligkeitsdatum</label>
-                                    <input type="date" class="form-control" id="editDueDate"
-                                        th:value="${#temporals.format(todo.dueDate.getDate(), 'yyyy-MM-dd')}"
-                                        name="dueDate">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editReminderDate" class="form-label">Erinnerungsdatum</label>
-                                    <input type="date" class="form-control" id="reminderDate" name="reminderDate"
-                                        th:value="${#temporals.format(todo.reminderDate.getDate(), 'yyyy-MM-dd')}">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div th:each="todo : ${todoListEntry.value}" th:if="${todo.todoListId eq todoListEntry.key.id}">
+                <div class="modal fade" th:id="'editTodoModal-' + ${todo.id}" tabindex="-1"
+                    aria-labelledby="editTodoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editTodoModalLabel">To-Do bearbeiten</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/editTodo}" method="post">
+                                    <input type="hidden" name="todoId" th:value="${todo.id}">
+                                    <div class="mb-3">
+                                        <label for="editName" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="editName" th:value="${todo.name}"
+                                            name="name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editDescription" class="form-label">Beschreibung</label>
+                                        <input type="text" class="form-control" id="editDescription"
+                                            th:value="${todo.description}" name="description">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editDueDate" class="form-label">Fälligkeitsdatum</label>
+                                        <input type="date" class="form-control" id="editDueDate"
+                                            th:value="${#temporals.format(todo.dueDate.getDate(), 'yyyy-MM-dd')}"
+                                            name="dueDate" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editReminderDate" class="form-label">Erinnerungsdatum</label>
+                                        <input type="date" class="form-control" id="reminderDate" name="reminderDate"
+                                            th:value="${#temporals.format(todo.reminderDate.getDate(), 'yyyy-MM-dd')}"
+                                            required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="todoListEntry, listIndex: ${todoMap}">
+            <div th:each="subTodo : ${todoListEntry.value}" th:if="${subTodo.todoListId eq todoListEntry.key.id}">
+                <div class="modal fade" th:id="'editSubTodoModal-' + ${subTodo.id}" tabindex="-1"
+                    aria-labelledby="editSubTodoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editSubTodoModalLabel">Sub-To-Do bearbeiten</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/createSubTodo}" method="post">
+                                    <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
+                                    <input type="hidden" name="todoId" th:value="${subTodo.id}">
+                                    <div class="mb-3">
+                                        <label for="editSubTodoName" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="editSubTodoName"
+                                            th:value="${subTodo.name}" name="name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editSubTodoDescription" class="form-label">Beschreibung</label>
+                                        <input type="text" class="form-control" id="editSubTodoDescription"
+                                            th:value="${subTodo.description}" name="description">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editSubTodoDueDate" class="form-label">Fälligkeitsdatum</label>
+                                        <input type="date" class="form-control" id="editSubTodoDueDate"
+                                            th:value="${#temporals.format(subTodo.dueDate.getDate(), 'yyyy-MM-dd')}"
+                                            name="dueDate" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editSubTodoReminderDate" class="form-label">Erinnerungsdatum</label>
+                                        <input type="date" class="form-control" id="editSubTodoReminderDate"
+                                            name="reminderDate"
+                                            th:value="${#temporals.format(subTodo.reminderDate.getDate(), 'yyyy-MM-dd')}"
+                                            required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div th:each="todoListEntry, listIndex: ${todoMap}">
-        <div th:each="subTodo : ${todoListEntry.value}" th:if="${subTodo.todoListId eq todoListEntry.key.id}">
-            <div class="modal fade" th:id="'editSubTodoModal-' + ${subTodo.id}" tabindex="-1"
-                aria-labelledby="editSubTodoModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editSubTodoModalLabel">Sub-To-Do bearbeiten</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form th:action="@{/createSubTodo}" method="post">
-                                <input type="hidden" name="todoListId" th:value="${todoListEntry.key.id}">
-                                <input type="hidden" name="todoId" th:value="${subTodo.id}">
-                                <div class="mb-3">
-                                    <label for="editSubTodoName" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="editSubTodoName"
-                                        th:value="${subTodo.name}" name="name">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editSubTodoDescription" class="form-label">Beschreibung</label>
-                                    <input type="text" class="form-control" id="editSubTodoDescription"
-                                        th:value="${subTodo.description}" name="description">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editSubTodoDueDate" class="form-label">Fälligkeitsdatum</label>
-                                    <input type="date" class="form-control" id="editSubTodoDueDate"
-                                        th:value="${#temporals.format(subTodo.dueDate.getDate(), 'yyyy-MM-dd')}"
-                                        name="dueDate">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editSubTodoReminderDate" class="form-label">Erinnerungsdatum</label>
-                                    <input type="date" class="form-control" id="editSubTodoReminderDate"
-                                        name="reminderDate"
-                                        th:value="${#temporals.format(subTodo.reminderDate.getDate(), 'yyyy-MM-dd')}">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </body>
 
 </html>
