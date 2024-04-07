@@ -247,14 +247,12 @@ public void checkReminder() {
             LocalDate date = LocalDate.now();
             if (date.isAfter(todo.getReminderDate().getDate())) {
                 for (Notification notification : notificationService.findAllForUser(user)) {
-                    notification.notify("Das To-Do \\\"" + todo.getName() + "\\\" wurde nicht zum eingetragenen Datum, dem "
-                                        + todo.getDueDate().formatDate() + ", abgeschlossen!");
+                    notification.notify("Das To-Do \\\"" + todo.getName() + "\\\" wurde nicht zum eingetragenen Datum, dem " + todo.getDueDate().formatDate() + ", abgeschlossen!");
                 }
             }
             if (date.isAfter(todo.getDueDate().getDate())) {
                 for (Notification notification : notificationService.findAllForUser(user)) {
-                    notification.notify("Das To-Do \\\"" + todo.getName() + "\\\" wurde nicht zum eingetragenen Datum, dem "
-                                        + todo.getDueDate().formatDate() + ", abgeschlossen!");
+                    notification.notify("Das To-Do \\\"" + todo.getName() + "\\\" wurde nicht zum eingetragenen Datum, dem " + todo.getDueDate().formatDate() + ", abgeschlossen!");
                 }
             }
         }
