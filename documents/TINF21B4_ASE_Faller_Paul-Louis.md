@@ -117,6 +117,8 @@ Aggregate sind Sammlungen von Entitäten oder Wertobjekten, die in Beziehung zue
 
 Die Anwendung wurde so gestaltet, das jede Enitität ein eigenes Aggregate bildet mit sich selbst als Aggregate Root. Es existieren also die Aggregate: User-Aggregat, TodoList-Aggregat, Todo-Aggregat und Notification-Aggregat. Die zwei Entitäten TodoList und Todo hätte man als ein Aggregat zusammenfassen können, jedoch wurde sich dagegen entschieden, da so die Implementierung der Persistenzschicht etwas übersichtlicher gestaltet ist, durch die Trennung des Anwendungscode zwischen den beiden Entitäten.
 
+![Aggregates drawio](https://github.com/Freaky2164/ToDoApp/assets/64361270/eea0d0ab-1eb3-4bb7-b161-cac532c88131)
+
 **Repositories:**
 
 Ein Repository ist die Schnittstelle zwischen der Domäne und der Persistenz-Schicht. Für jedes Aggregate Root (s.o.) wird ein Repository benötigt. In diesem Fall sind dies das `de.dhbw.ase.todoapp.domain.entities.user.UserRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoListRepository`, `de.dhbw.ase.todoapp.domain.entities.todo.TodoRepository` und das `de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository`. Ein Repository ist zunächst nur eine Schnittstelle (Interface) die aber eine Vielzahl von Ausprägungen haben kann. Wichtig ist, dass diese konkreten Ausprägungen nicht mit der Domäne vermischt werden, da diese sich nicht für die konkrete Implementierung der Persistenz interessiert. Der Domäne wird nur das Interface präsentiert. Dies hat den Vorteil, dass im Hintergrund beliebige Implementierungen genutzt und diese auch reibungslos ausgetauscht werden können. Folgende Implementierungen sind in dieser Applikation vorhanden:
