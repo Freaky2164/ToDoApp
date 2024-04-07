@@ -2,7 +2,7 @@
 
 ## Analyse der Ubiquitous Language
 
-Die Ubiquitous Language ist ein Konzept des Domain Driven Design, welches Verständnisprobleme zwischen Entwicklern und Domänenexperten, durch das Definieren einer gemeinsamen Projektsprache, vorbeugen soll. Die Projektsprache beinhaltet Definitionen für das gemeinsame Verständnis von Konzepten, Prozessen und Regeln aus der Domäne.
+Die Ubiquitous Language ist ein Konzept des Domain Driven Design, das dazu dient, Verständnisprobleme zwischen Entwicklern und Domänenexperten zu vermeiden, indem eine gemeinsame Projektsprache definiert wird. Diese Projektsprache umfasst Definitionen für ein gemeinsames Verständnis von Konzepten, Prozessen und Regeln innerhalb der Domäne.
 
 Wichtige Begriffe und Prozesse innerhalb der Problemdomäne "Todo-App" sind:
 
@@ -79,6 +79,8 @@ Eine Benachrichtigung zu bearbeiten bedeutet entweder den Namen anzupassen oder 
 
 **Value Objects:**
 
+Value Objects (Wertobjekte) erfassen einen oder mehrere Werte in einem neuen Wert oder Typ. Das Value Object kann daraufhin bestimmte Regeln überprüfen, die in der Problemdomäne für den eingekapselten Wert gelten. Ein VO muss unveränderlich sein, was bedeutet, dass sein Zustand nach der Erzeugung nicht mehr geändert werden kann. Zwei VOs sind gleich, wenn ihre eingekapselten Werte übereinstimmen.
+
 Die Klasse `de.dhbw.ase.todoapp.domain.vo.Email` ist ein solches Value Object. Sie wird verwendet, um eine Zeichenkette zu kapseln, die dem Format einer E-Mail entsprechen muss. Nach der Instanziierung wird die Zeichenkette auf das korrekte Format überprüft und kann danach nicht mehr geändert werden. Die beiden Methoden `hashCode()` und `equals()` werden überschrieben, um die Gleichheit zweier Objekte bei Gleichheit der E-Mail-Adressen zu gewährleisten.
 
 Weitere Value Objects sind:
@@ -92,6 +94,8 @@ Auch diese Value Objects sind unveränderlich, kapseln ein ''Wertkonzept'' und s
 
 **Entities:**
 
+Entitäten haben eine eindeutige Identität und einen eigenen Lebenszyklus. Sie aggregieren Werte, einschließlich Wertobjekte, zu einem Ganzen und repräsentieren die Daten oder "Dinge", die für die Domäne relevant sind und mit denen die Anwendung arbeitet. Entitäten werden in der Persistenzschicht gespeichert.
+
 Die Klasse `de.dhbw.ase.todoapp.domain.entities.todo.Todo` ist eine Entität, die den Kern der Daten darstellt, mit denen eine To-Do-Anwendung arbeitet. Sie eindeutig durch eine ID identifizierbar und muss, um für den Anwender und die Anwendung von Nutzen zu sein, persistiert werden. Sie aggregiert dafür mehrere Daten wie beispielsweise die VOs `de.dhbw.ase.todoapp.domain.vo.Name`, `de.dhbw.ase.todoapp.domain.vo.Description` und `de.dhbw.ase.todoapp.domain.vo.Email`. Die Daten, die von der Entität aggregiert werden, können des Weiteren vom Anwender geändert werden d.h., es existiert ein eigener Lebenszyklus.
 
 Weitere Entities sind:
@@ -103,15 +107,19 @@ Auch diese Entities sind durch eine ID identifizierbar, aggregieren mehrere Date
 
 **Domain Services:**
 
+Ein Domain Service ist eine Hilfsklasse, die komplexe Regeln innerhalb des Domänenmodells implementiert. Diese Regeln können nicht eindeutig einem Wertobjekt oder einer Entität zugeordnet werden. Ein solcher Service wird benötigt, wenn mehrere Entitäten und Wertobjekte zur Überprüfung herangezogen werden müssen oder externe Dienste eingebunden werden müssen. Durch die Auslagerung solcher Überprüfungen in Domain Services wird verhindert, dass die Domäne unnötig komplex wird.
+
 Als Domain Services dienen in der Anwendung die Klassen `de.dhbw.ase.todoapp.domain.entities.notification.reminder.ReminderDateStrategy` und `de.dhbw.ase.todoapp.domain.entities.notification.reminder.DueDateStrategy`. Beide Klassen sind außerdem Implementierungen eines Strategy-Pattern und sind dazu da, das Erinnerungsdatum und Abschlussdatum eines To-Dos zu überprüfen. Ist eines der beiden Daten überschritten, werden Notifications, die ebenfalls an den Domain Service übergeben werden, mit einer entsprechenden Nachricht darüber informiert. Daher werden hier für die Überprüfung mehrere Entitäten und VOs benötigt, was die Auslagerung dieser Komplexität in einen Domain Service begründet.
 
 **Aggregates:**
+
+Aggregate sind Sammlungen von Entitäten oder Wertobjekten, die in Beziehung zueinander stehen können (1:n, n:m oder 1:1 usw.). Jedes Aggregate hat eine sogenannte Aggregate-Root, über die auf die Elemente des Aggregats zugegriffen werden kann. Aggregate werden verwendet, um Objektbeziehungen zu organisieren und Domänenregeln einzuhalten. Die Aggregate-Root fungiert als Zugangspunkt und steuert den Zugriff auf Objekte innerhalb des Aggregats sowie die Änderung von Daten.
 
 Die Anwendung wurde so gestaltet, das jede Enitität ein eigenes Aggregate bildet mit sich selbst als Aggregate Root. Es existieren also die Aggregate: User-Aggregat, TodoList-Aggregat, Todo-Aggregat und Notification-Aggregat. Die zwei Entitäten TodoList und Todo hätte man als ein Aggregat zusammenfassen können, jedoch wurde sich dagegen entschieden, da so die Implementierung der Persistenzschicht etwas übersichtlicher gestaltet ist, durch die Trennung des Anwendungscode zwischen den beiden Entitäten.
 
 **Repositories:**
 
-Für jedes Aggregate Root (s.o.) wird ein Repository benötigt. In diesem Fall sind dies das `de.dhbw.ase.todoapp.domain.entities.user.UserRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoListRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoRepository` und das `de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository`. Ein Repository ist zunächst nur eine Schnittstelle (Interface) die aber eine Vielzahl von Ausprägungen haben kann. Wichtig ist, dass diese konkreten Ausprägungen nicht mit der Domäne vermischt werden, da diese sich nicht für die konkrete Implementierung der Persistenz interessiert. Der Domäne wird nur das Interface präsentiert. Dies hat den Vorteil, dass im Hintergrund beliebige Implementierungen genutzt und diese auch reibungslos ausgetauscht werden können. Folgende Implementierungen sind in dieser Applikation vorhanden:
+Ein Repository ist die Schnittstelle zwischen der Domäne und der Persistenz-Schicht. Für jedes Aggregate Root (s.o.) wird ein Repository benötigt. In diesem Fall sind dies das `de.dhbw.ase.todoapp.domain.entities.user.UserRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoListRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoRepository` und das `de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository`. Ein Repository ist zunächst nur eine Schnittstelle (Interface) die aber eine Vielzahl von Ausprägungen haben kann. Wichtig ist, dass diese konkreten Ausprägungen nicht mit der Domäne vermischt werden, da diese sich nicht für die konkrete Implementierung der Persistenz interessiert. Der Domäne wird nur das Interface präsentiert. Dies hat den Vorteil, dass im Hintergrund beliebige Implementierungen genutzt und diese auch reibungslos ausgetauscht werden können. Folgende Implementierungen sind in dieser Applikation vorhanden:
 
 - `de.dhbw.ase.todoapp.plugins.persistence.UserRepositoryBridge`
 - `de.dhbw.ase.todoapp.plugins.persistence.TodoListRepositoryBridge`
@@ -121,6 +129,23 @@ Für jedes Aggregate Root (s.o.) wird ein Repository benötigt. In diesem Fall s
 Bei allen vier Klassen handelt es sich um Brücken zwischen dem Repository-Interface und der `JpaRepository`-Klasse, die die tatsächliche Implementierung der Persistierung der Daten über JPA ermöglicht.
 
 # Clean Architecture
+
+Das Hauptziel der Clean Architecture besteht darin, Software so zu konzipieren, dass sie langfristig Bestand hat. Eine grundlegende Konzeption dabei ist die klare Separierung zwischen technologieabhängigen und technologieunabhängigen Teilen. Die Architektur soll es ermöglichen, die zugrundeliegenden Technologien auszutauschen, ohne dass der Kern der Anwendung davon beeinflusst wird.
+### Schichtarchitektur planen und begründen
+
+Die Clean Architecture unterteilt eine Software in mehrere Schichten, wobei Abhängigkeiten immer nur von außen nach innen gehen dürfen. Dabei ist es wichtig, dass innere Schichten nichts von den äußeren Schichten wissen. Eine klare Schichtarchitektur in Clean Architecture hilft dabei, die Software langfristig wartbar, flexibel und unabhängig von den zugrundeliegenden Technologien zu gestalten.
+
+Im vorliegenden Projekt lassen sich theoretisch fünf Schichten unterscheiden, die von außen nach innen angeordnet sind:
+
+- **Plugins:** In der Plugin-Schicht befindet sich das Benutzerinterface und sonstige Ressourcen, die dafür benötigt werden. Außerdem enthält sie Code mit direkten Abhängigkeiten zu externen Bibliotheken oder Frameworks.
+
+- **Adapters:** Die Adapter-Schicht enthält hauptsächlich Mapping-Code, der die Daten aus der Plugin-Schicht in ein Format umwandelt, das von der Applikationsschicht verstanden wird, und umgekehrt. Diese Schicht kann oft weggelassen werden, wenn die Datenmodelle sich nicht stark unterscheiden.
+
+- **Application Code:** Diese Schicht enthält Code, der direkt mit den Anwendungsfällen und Anforderungen der Applikation zusammenhängt. Sie fasst Elemente aus dem Domänen-Code zusammen und verwendet diese zur Umsetzung der Anwendungsfälle. Änderungen in dieser Schicht dürfen den Domänen-Code nicht beeinflussen und umgekehrt. Die Use Cases dieser Schicht sollten nicht interessiert sein, wer sie aufruft und wie das Ergebnis präsentiert wird.
+
+- **Domain Code:** Hier befindet sich der Code, der direkt mit der Problemdomäne zusammenhängt, wie Entitäten und Value Objects. Änderungen in dieser Schicht sollten unabhängig von Änderungen an anderen Schichten sein.
+
+- **Abstraction Code:** Diese Schicht enthält domänenübergreifendes Wissen und Funktionalitäten, die in vielen oder allen anderen Schichten benötigt werden. Sie abstrahiert beispielsweise von Code oder Abhängigkeiten auf Bibliotheken.
 
 Die Schichten wurden jeweils als einzelne Maven-Module umgesetzt. Im Folgenden werden die Schichten näher erläutert:
 
@@ -170,7 +195,7 @@ Diese Entkopplung bietet mehrere Vorteile: Erstens ermöglicht sie eine einfache
 
 ## Code Smells
 
-**Duplicate Code -- `TodoController`**
+**Duplicate Code - `TodoController`**
 
 Der Code-Smell `Dispensables` betrifft redundante oder überflüssige Codeabschnitte, die die Lesbarkeit und Wartbarkeit des Codes beeinträchtigen können. Ein häufiges Beispiel dafür ist duplizierter Code, bei dem identische oder ähnliche Codefragmente an verschiedenen Stellen im Code vorhanden sind. Diese Redundanz kann zu einem erhöhten Wartungsaufwand führen, da Änderungen an duplizierten Codeabschnitten an mehreren Stellen im Code vorgenommen werden müssen.
 
@@ -185,7 +210,7 @@ if (userId == null) {
 
 Dieser Code wird am Anfang jeder Methode im `TodoController` verwendet, um sicherzustellen, dass nur eingeloggte Benutzer auf Funktionen zugreifen, die auf die Daten des Nutzers zugreifen. Diese Duplikation führt zu erhöhtem Wartungsaufwand und beeinträchtigt die Wartbarkeit des Codes. Es wäre besser, eine allgemeine Methode zu implementieren, die diese Überprüfung durchführt und somit Redundanzen vermeidet.
 
-**Long Class -- `TodoController`**
+**Long Class - `TodoController`**
 
 Der Code-Smell `Long Class` aus der Kateogrie `Bloaters` bezieht sich auf Klassen, die zu viele Verantwortlichkeiten oder Funktionen haben und daher zu groß und unübersichtlich werden. Eine lange Klasse kann schwer zu verstehen und zu warten sein, da sie eine Vielzahl von Aufgaben in sich vereint.
 
@@ -193,9 +218,9 @@ In der Klasse `TodoController` scheint der Code-Smell `Long Class` vorzuliegen, 
 
 Durch die Aufteilung der Funktionalitäten in separate Controller, wie z.B. einen `TodoListController`, einen `TodoController` und einen `NotificationController`, kann die Lesbarkeit und Wartbarkeit des Codes verbessert werden. Jeder Controller kann sich dann auf eine spezifische Aufgabe konzentrieren und ist dadurch leichter zu verstehen und zu pflegen. Dies trägt dazu bei, den Code schlanker, besser strukturiert und leichter erweiterbar zu machen.
 
-**Long Parameter List -- `TodoController`**
+**Long Parameter List - `TodoController`**
 
-Der Code-Smell `Long Parameter List` tritt auf, wenn Methoden eine große Anzahl von Parametern enthalten, was die Lesbarkeit und Wartbarkeit des Codes beeinträchtigen kann. In der Klasse `TodoController` scheint dieser Code-Smell in den Methoden `createSubTodo` und `editTodo` vorhanden zu sein, da sie eine lange Liste von Parametern enthalten, die an die Methode übergeben werden müssen.
+Der Code-Smell `Long Parameter List` aus der Kateogrie `Bloaters` tritt auf, wenn Methoden eine große Anzahl von Parametern enthalten, was die Lesbarkeit und Wartbarkeit des Codes beeinträchtigen kann. In der Klasse `TodoController` scheint dieser Code-Smell in den Methoden `createSubTodo` und `editTodo` vorhanden zu sein, da sie eine lange Liste von Parametern enthalten, die an die Methode übergeben werden müssen.
 
 ```java
 @PostMapping("/createSubTodo")
@@ -212,7 +237,7 @@ Die Verwendung von so vielen Parametern in einer Methode kann dazu führen, dass
 
 Eine bessere Lösung für dieses Problem besteht darin, Data Transfer Objects (DTOs) zu verwenden, um die Daten zu kapseln und an die Methode zu übergeben. Ein DTO ist eine einfache Datenklasse, die nur die benötigten Attribute enthält und keine zusätzliche Logik oder Verantwortlichkeiten hat. Durch die Verwendung von DTOs können die Methodenaufrufe vereinfacht und die Lesbarkeit des Codes verbessert werden. Außerdem wird die Flexibilität erhöht, da Änderungen an den Parametern eines DTOs nur an einer Stelle vorgenommen werden müssen, anstatt an allen Stellen, an denen die Methode aufgerufen wird.
 
-**Cognitive Complexity too high -- `TodoDateChecker`**
+**Cognitive Complexity too high - `TodoDateChecker`**
 
 Die Methode `checkReminder` in der Klasse `TodoDateChecker` weist den Code-Smell `Cognitive Complexity of methods should not be too high` auf, welcher bspw. von SonarLint analysiert wird. Dieser Code-Smell bezieht sich darauf, dass die Methode zu komplex ist und schwer zu verstehen sein kann, was die Lesbarkeit und Wartbarkeit des Codes beeinträchtigt.
 
@@ -246,7 +271,7 @@ Um diesen Code-Smell zu beheben, könnte die Methode aufgeteilt werden, um die V
 
 ## Refactorings
 
-### Long Class -- `TodoController`
+### Long Class - `TodoController`
 
 Durch die Aufteilung der Funktionalitäten in separate Controller-Klassen, wie den `TodoListController`, den `TodoController` und den `NotificationController`, wurde der Code-Smell "Long Class" in der `TodoController`-Klasse erfolgreich behoben. Jeder Controller ist nun für spezifische Aufgaben verantwortlich, was zu einer klareren Struktur und einem leichter verständlichen Code führt.
 
@@ -254,9 +279,9 @@ Die Verwendung dieser spezialisierten Controller hat nicht nur die Klassen schla
 
 Insgesamt hat dieses Refactoring zu einem saubereren und wartungsfreundlicheren Code geführt, der nun einfacher zu pflegen und zu erweitern ist.
 
-Refactoring in Commit: Refactored TodoController by splitting into multiple controller classes (Commit-ID: 2cae50269eb5072f82a2844da6177923bc0e5cb1)
+Refactoring in Commit: [Refactored TodoController by splitting into multiple controller classes](https://github.com/Freaky2164/ToDoApp/commit/2cae50269eb5072f82a2844da6177923bc0e5cb1)
 
-### Cognitive Complexity too high -- `TodoDateChecker`
+### Cognitive Complexity too high - `TodoDateChecker`
 
 Nach dem Refactoring wurde der Code in der Methode `checkReminder` in der Klasse `TodoDateChecker` neu strukturiert, um den Code-Smell `Cognitive Complexity of methods should not be too high` zu beheben. Dabei wurde das Strategy-Pattern geschickt eingesetzt, um die Verantwortlichkeiten zur Überprüfung und Benachrichtigung in die Strategy-Klassen auszulagern.
 
@@ -266,8 +291,7 @@ Durch die Anwendung des Strategy-Patterns wurde die Komplexität der `checkRemin
 
 Dieses Refactoring hat nicht nur die Lesbarkeit und Wartbarkeit des Codes verbessert, sondern auch die Flexibilität erhöht, da neue Überprüfungsstrategien einfach hinzugefügt werden können, ohne die `TodoDateChecker`-Klasse groß ändern zu müssen.
 
-Refactoring in Commit: Reduced method complexity in TodoDateChecker by introducing domain
-services and strategy pattern (Commit-ID: 48afef0dfb3d40104a2f6cecac5602bc1c02cb3b)
+Refactoring in Commit: [Reduced method complexity in TodoDateChecker by introducing domain](https://github.com/Freaky2164/ToDoApp/commit/48afef0dfb3d40104a2f6cecac5602bc1c02cb3b)
 
 # Entwurfsmuster
 
