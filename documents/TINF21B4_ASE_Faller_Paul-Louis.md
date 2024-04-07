@@ -119,7 +119,7 @@ Die Anwendung wurde so gestaltet, das jede Enitität ein eigenes Aggregate bilde
 
 **Repositories:**
 
-Ein Repository ist die Schnittstelle zwischen der Domäne und der Persistenz-Schicht. Für jedes Aggregate Root (s.o.) wird ein Repository benötigt. In diesem Fall sind dies das `de.dhbw.ase.todoapp.domain.entities.user.UserRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoListRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoRepository` und das `de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository`. Ein Repository ist zunächst nur eine Schnittstelle (Interface) die aber eine Vielzahl von Ausprägungen haben kann. Wichtig ist, dass diese konkreten Ausprägungen nicht mit der Domäne vermischt werden, da diese sich nicht für die konkrete Implementierung der Persistenz interessiert. Der Domäne wird nur das Interface präsentiert. Dies hat den Vorteil, dass im Hintergrund beliebige Implementierungen genutzt und diese auch reibungslos ausgetauscht werden können. Folgende Implementierungen sind in dieser Applikation vorhanden:
+Ein Repository ist die Schnittstelle zwischen der Domäne und der Persistenz-Schicht. Für jedes Aggregate Root (s.o.) wird ein Repository benötigt. In diesem Fall sind dies das `de.dhbw.ase.todoapp.domain.entities.user.UserRepository`,`de.dhbw.ase.todoapp.domain.entities.todo.TodoListRepository`, `de.dhbw.ase.todoapp.domain.entities.todo.TodoRepository` und das `de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository`. Ein Repository ist zunächst nur eine Schnittstelle (Interface) die aber eine Vielzahl von Ausprägungen haben kann. Wichtig ist, dass diese konkreten Ausprägungen nicht mit der Domäne vermischt werden, da diese sich nicht für die konkrete Implementierung der Persistenz interessiert. Der Domäne wird nur das Interface präsentiert. Dies hat den Vorteil, dass im Hintergrund beliebige Implementierungen genutzt und diese auch reibungslos ausgetauscht werden können. Folgende Implementierungen sind in dieser Applikation vorhanden:
 
 - `de.dhbw.ase.todoapp.plugins.persistence.UserRepositoryBridge`
 - `de.dhbw.ase.todoapp.plugins.persistence.TodoListRepositoryBridge`
@@ -229,8 +229,7 @@ public String createSubTodo(@RequestParam("todoListId") UUID todoListId, @Reques
 
 ```java
 @PostMapping("/editTodo")
-public String editTodo(@RequestParam("todoId") UUID todoId, @RequestParam("name") String name,
-@RequestParam("description") String description, @RequestParam("dueDate") LocalDate dueDate, @RequestParam("reminderDate") LocalDate reminderDate, HttpSession session, Model model)
+public String editTodo(@RequestParam("todoId") UUID todoId, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("dueDate") LocalDate dueDate, @RequestParam("reminderDate") LocalDate reminderDate, HttpSession session, Model model)
 ```
 
 Die Verwendung von so vielen Parametern in einer Methode kann dazu führen, dass der Methodenaufruf schwer zu lesen und zu verstehen ist. Außerdem erhöht sich das Risiko von Fehlern bei der Parameterübergabe, insbesondere wenn die Parameterreihenfolge nicht eindeutig ist.
