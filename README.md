@@ -15,8 +15,8 @@ To start the application you must run the main method in the ToDoApplication cla
 
 You can enter an e-mail address and password to login to the application. The project works with an in-memory H2 database which means that data is not persisted over the restarting of the application. Before logging in, you must register yourself by providing an e-mail adress and password. 
 
-![LoginView](https://github.com/Freaky2164/ToDoApp/blob/main/documents/LoginView.png)
+![LoginView](https://github.com/Freaky2164/ToDoApp/blob/main/documents/images/LoginView.png)
 
-Afterwards you should be ablet to login and the application redirects you to the main view where you can add, edit or delete to do lists and to dos to manage your daily life.
+Afterwards you should be able to login and the application redirects you to the main view. In the main view you can add, edit or delete to-do lists and to-dos in order to help you manage your daily life.
 
-![MainView](https://github.com/Freaky2164/ToDoApp/blob/main/documents/MainView.png)
+![MainView](https://github.com/Freaky2164/ToDoApp/blob/main/documents/images/MainView.png)
