@@ -6,15 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import de.dhbw.ase.todoapp.abstraction.observer.Observable;
-import de.dhbw.ase.todoapp.application.NotificationService;
-import de.dhbw.ase.todoapp.application.TodoService;
-import de.dhbw.ase.todoapp.application.UserService;
 import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
 import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
 import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
@@ -23,19 +18,10 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-public class ViewController extends Observable
+public class ViewController extends BaseController
 {
-    @Autowired
-    TodoService todoService;
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    NotificationService notificationService;
-
     @GetMapping("/todo")
-    public String renderTodoPage(HttpSession session, Model model)
+    public final String renderTodoPage(HttpSession session, Model model)
     {
         UUID userId = (UUID)session.getAttribute("userId");
         if (userId == null)

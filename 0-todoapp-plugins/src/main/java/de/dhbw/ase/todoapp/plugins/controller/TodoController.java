@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-public class TodoController extends ViewController
+public class TodoController extends BaseController
 {
     @PostMapping("/createTodo")
     public String createTodo(@RequestParam("todoListId") UUID todoListId, @RequestParam("name") String name,

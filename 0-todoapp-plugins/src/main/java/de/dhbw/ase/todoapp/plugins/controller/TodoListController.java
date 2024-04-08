@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-public class TodoListController extends ViewController
+public class TodoListController extends BaseController
 {
     @PostMapping("/createTodoList")
     public String createTodoList(@RequestParam("todoListName") String todoListName, HttpSession session, Model model)

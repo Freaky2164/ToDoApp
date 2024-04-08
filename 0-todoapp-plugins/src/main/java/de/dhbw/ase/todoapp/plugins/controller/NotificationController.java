@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-public class NotificationController extends ViewController
+public class NotificationController extends BaseController
 {
     @PostMapping("/createNotification")
     public String createNotification(@RequestParam("name") String name, @RequestParam("webHookUrl") String webHookUrl,
