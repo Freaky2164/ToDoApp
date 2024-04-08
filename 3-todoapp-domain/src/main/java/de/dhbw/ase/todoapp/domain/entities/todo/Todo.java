@@ -211,7 +211,7 @@ public class Todo
     }
 
 
-    public boolean hasReachedCompletionDate()
+    public boolean hasReachedDueDate()
     {
         return dueDate.isPastDate();
     }
