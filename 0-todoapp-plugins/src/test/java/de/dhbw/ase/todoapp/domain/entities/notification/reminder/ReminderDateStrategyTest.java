@@ -1,6 +1,7 @@
 package de.dhbw.ase.todoapp.domain.entities.notification.reminder;
 
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
@@ -10,10 +11,10 @@ import java.util.UUID;
 
 import org.junit.Test;
 
+import de.dhbw.ase.todoapp.abstraction.event.ReachedReminderDateEvent;
 import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
 import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
 import de.dhbw.ase.todoapp.domain.entities.todo.TodoFactory;
-import de.dhbw.ase.todoapp.domain.vo.CalendarDate;
 
 
 public class ReminderDateStrategyTest
@@ -22,7 +23,6 @@ public class ReminderDateStrategyTest
     public void testCheckDate_NotificationSent()
     {
         LocalDate dueDate = LocalDate.now();
-        CalendarDate dueDateCalendarDate = new CalendarDate(dueDate);
         Todo todo = TodoFactory.createTodo(UUID.randomUUID(), "Test Todo", "Todo Description", dueDate, dueDate.minusDays(1));
         List<Notification> notifications = new ArrayList<>();
         Notification notification1 = mock(Notification.class);
@@ -33,10 +33,8 @@ public class ReminderDateStrategyTest
         ReminderDateStrategy reminderDateStrategy = new ReminderDateStrategy();
         reminderDateStrategy.checkDate(todo, notifications);
 
-        verify(notification1, times(1)).notify("Erinnerung: Das To-Do \\\"" + todo.getName() + "\\\" muss bis zum "
-                                               + dueDateCalendarDate.formatDate() + " abgeschlossen werden!");
-        verify(notification2, times(1)).notify("Erinnerung: Das To-Do \\\"" + todo.getName() + "\\\" muss bis zum "
-                                               + dueDateCalendarDate.formatDate() + " abgeschlossen werden!");
+        verify(notification1, times(1)).notify(any(ReachedReminderDateEvent.class));
+        verify(notification2, times(1)).notify(any(ReachedReminderDateEvent.class));
     }
 
 
@@ -51,6 +49,6 @@ public class ReminderDateStrategyTest
         ReminderDateStrategy reminderDateStrategy = new ReminderDateStrategy();
         reminderDateStrategy.checkDate(todo, notifications);
 
-        verify(notification, times(0)).notify("");
+        verify(notification, times(0)).notify(null);
     }
 }

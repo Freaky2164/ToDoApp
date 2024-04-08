@@ -1,6 +1,7 @@
 package de.dhbw.ase.todoapp.domain.entities.notification.reminder;
 
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
@@ -10,10 +11,10 @@ import java.util.UUID;
 
 import org.junit.Test;
 
+import de.dhbw.ase.todoapp.abstraction.event.ReachedDueDateEvent;
 import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
 import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
 import de.dhbw.ase.todoapp.domain.entities.todo.TodoFactory;
-import de.dhbw.ase.todoapp.domain.vo.CalendarDate;
 
 
 public class DueDateStrategyTest
@@ -23,7 +24,6 @@ public class DueDateStrategyTest
     {
         LocalDate today = LocalDate.now();
         LocalDate dueDate = today.minusDays(1);
-        CalendarDate dueDateCalendarDate = new CalendarDate(dueDate);
         Todo todo = TodoFactory.createTodo(UUID.randomUUID(), "Test Todo", "Todo Description", dueDate, dueDate.minusDays(1));
         List<Notification> notifications = new ArrayList<>();
         Notification notification1 = mock(Notification.class);
@@ -34,10 +34,8 @@ public class DueDateStrategyTest
         DueDateStrategy dueDateStrategy = new DueDateStrategy();
         dueDateStrategy.checkDate(todo, notifications);
 
-        verify(notification1, times(1)).notify("Das To-Do \\\"Test Todo\\\" wurde nicht zum eingetragenen Datum, dem "
-                                               + dueDateCalendarDate + ", abgeschlossen!");
-        verify(notification2, times(1)).notify("Das To-Do \\\"Test Todo\\\" wurde nicht zum eingetragenen Datum, dem "
-                                               + dueDateCalendarDate + ", abgeschlossen!");
+        verify(notification1, times(1)).notify(any(ReachedDueDateEvent.class));
+        verify(notification2, times(1)).notify(any(ReachedDueDateEvent.class));
     }
 
 
@@ -52,6 +50,6 @@ public class DueDateStrategyTest
         DueDateStrategy dueDateStrategy = new DueDateStrategy();
         dueDateStrategy.checkDate(todo, notifications);
 
-        verify(notification, times(0)).notify("");
+        verify(notification, times(0)).notify(null);
     }
 }

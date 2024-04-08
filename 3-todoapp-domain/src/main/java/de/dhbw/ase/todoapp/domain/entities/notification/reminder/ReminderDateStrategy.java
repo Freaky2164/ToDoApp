@@ -3,6 +3,7 @@ package de.dhbw.ase.todoapp.domain.entities.notification.reminder;
 
 import java.util.List;
 
+import de.dhbw.ase.todoapp.abstraction.event.ReachedReminderDateEvent;
 import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
 import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
 
@@ -16,8 +17,7 @@ public class ReminderDateStrategy implements ReminderStrategy
         {
             for (Notification notification : notifications)
             {
-                notification.notify("Erinnerung: Das To-Do \\\"" + todo.getName() + "\\\" muss bis zum "
-                                    + todo.getDueDate().formatDate() + " abgeschlossen werden!");
+                notification.notify(new ReachedReminderDateEvent(todo.getName().getValue(), todo.getDueDate().formatDate()));
             }
         }
     }

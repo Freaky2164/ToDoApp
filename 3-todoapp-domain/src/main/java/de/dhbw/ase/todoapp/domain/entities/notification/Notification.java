@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.UUID;
 
+import de.dhbw.ase.todoapp.abstraction.event.TodoEvent;
 import de.dhbw.ase.todoapp.abstraction.observer.TodoObserver;
 import de.dhbw.ase.todoapp.domain.vo.Name;
 import de.dhbw.ase.todoapp.domain.vo.WebHook;
@@ -91,13 +92,13 @@ public class Notification implements TodoObserver
 
 
     @Override
-    public void notify(String message)
+    public void notify(TodoEvent event)
     {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                                          .uri(URI.create(webHook.getUrl()))
                                          .header("Content-Type", "application/json")
-                                         .POST(HttpRequest.BodyPublishers.ofString("{ \"content\": \"" + message + "\" }"))
+                                         .POST(HttpRequest.BodyPublishers.ofString("{ \"content\": \"" + event.getMessage() + "\" }"))
                                          .build();
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }

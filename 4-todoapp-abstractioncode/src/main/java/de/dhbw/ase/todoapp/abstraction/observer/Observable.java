@@ -4,6 +4,8 @@ package de.dhbw.ase.todoapp.abstraction.observer;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dhbw.ase.todoapp.abstraction.event.TodoEvent;
+
 
 public class Observable
 {
@@ -21,11 +23,11 @@ public class Observable
     }
 
 
-    public void notifyObservers(String message)
+    public void notifyObservers(TodoEvent event)
     {
         for (TodoObserver observer : observers)
         {
-            observer.notify(message);
+            observer.notify(event);
         }
     }
 }

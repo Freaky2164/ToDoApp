@@ -1,7 +1,8 @@
 package de.dhbw.ase.todoapp.abstraction.observer;
 
+import de.dhbw.ase.todoapp.abstraction.event.TodoEvent;
 
 public interface TodoObserver
 {
-    void notify(String message);
+    void notify(TodoEvent event);
 }
