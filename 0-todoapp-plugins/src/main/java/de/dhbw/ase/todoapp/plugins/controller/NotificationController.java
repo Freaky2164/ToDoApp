@@ -30,7 +30,7 @@ public class NotificationController extends BaseController
 
         Notification notification = new Notification(userId, new Name(name), new WebHook(webHookUrl));
         notificationService.createNotification(notification);
-        registerObserver(notification);
+        notificationManager.registerNotification(notification);
         return "redirect:/todo";
     }
 
@@ -70,6 +70,8 @@ public class NotificationController extends BaseController
             notification.changeName(new Name(name));
             notification.setWebHook(new WebHook(webHookUrl));
             notificationService.createNotification(notification);
+            unregisterObserver(notification);
+            registerObserver(notification);
         });
         return "redirect:/todo";
     }

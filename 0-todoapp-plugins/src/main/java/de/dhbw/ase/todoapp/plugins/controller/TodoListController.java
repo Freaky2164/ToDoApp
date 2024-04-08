@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.dhbw.ase.todoapp.abstraction.event.TodoListCreatedEvent;
+import de.dhbw.ase.todoapp.abstraction.event.TodoListDeletedEvent;
+import de.dhbw.ase.todoapp.abstraction.event.TodoListRenamedEvent;
 import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
 import de.dhbw.ase.todoapp.domain.entities.user.User;
 import de.dhbw.ase.todoapp.domain.vo.Name;
@@ -29,7 +32,7 @@ public class TodoListController extends BaseController
 
         User user = userService.findUserById(userId);
         todoService.createTodoList(user, new Name(todoListName));
-        notifyObservers("Es wurde eine neue To-Do-Liste \\\"" + todoListName + "\\\" erstellt!");
+        notifyObservers(new TodoListCreatedEvent(todoListName));
         return "redirect:/todo";
     }
 
@@ -47,7 +50,7 @@ public class TodoListController extends BaseController
         todoListOptional.ifPresent(todoList ->
         {
             todoService.deleteTodoList(todoList);
-            notifyObservers("Die To-Do-Liste \\\"" + todoList.getName() + "\\\" wurde gelöscht!");
+            notifyObservers(new TodoListDeletedEvent(todoList.getName().getValue()));
         });
         return "redirect:/todo";
     }
@@ -66,9 +69,8 @@ public class TodoListController extends BaseController
         Optional<TodoList> todoListOptional = todoService.findTodoListById(todoListId);
         todoListOptional.ifPresent(todoList ->
         {
-            Name oldName = todoList.getName();
             todoService.renameTodoList(todoList, new Name(newName));
-            notifyObservers("Die To-Do-Liste \\\"" + oldName.toString() + "\\\" wurde in \\\"" + newName + "\\\" umbenannt!");
+            notifyObservers(new TodoListRenamedEvent(todoList.getName().getValue(), newName));
         });
         return "redirect:/todo";
     }

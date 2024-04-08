@@ -11,6 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.dhbw.ase.todoapp.abstraction.event.SubTodoCreatedEvent;
+import de.dhbw.ase.todoapp.abstraction.event.TodoCreatedEvent;
+import de.dhbw.ase.todoapp.abstraction.event.TodoDeletedEvent;
+import de.dhbw.ase.todoapp.abstraction.event.TodoEditedEvent;
+import de.dhbw.ase.todoapp.abstraction.event.TodoMarkedAsCompletedEvent;
+import de.dhbw.ase.todoapp.abstraction.event.TodoMarkedAsNotCompletedEvent;
 import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
 import de.dhbw.ase.todoapp.domain.entities.todo.TodoFactory;
 import de.dhbw.ase.todoapp.domain.vo.CalendarDate;
@@ -36,7 +42,7 @@ public class TodoController extends BaseController
 
         Todo todo = TodoFactory.createTodo(todoListId, name, description, dueDate, reminderDate);
         todoService.createTodo(todo);
-        notifyObservers("Es wurde ein neues To-Do \\\"" + name + "\\\" erstellt!");
+        notifyObservers(new TodoCreatedEvent(name));
         return "redirect:/todo";
     }
 
@@ -54,7 +60,7 @@ public class TodoController extends BaseController
         todoOptional.ifPresent(todo ->
         {
             todoService.deleteTodo(todo);
-            notifyObservers("Das To-Do \\\"" + todo.getName() + "\\\" wurde am gelöscht!");
+            notifyObservers(new TodoDeletedEvent(todo.getName().getValue()));
         });
         return "redirect:/todo";
     }
@@ -80,7 +86,7 @@ public class TodoController extends BaseController
             todo.setDueDate(new CalendarDate(dueDate));
             todo.setReminderDate(new CalendarDate(reminderDate));
             todoService.createTodo(todo);
-            notifyObservers("Das To-Do \\\"" + name + "\\\" wurde bearbeitet!");
+            notifyObservers(new TodoEditedEvent(name));
         });
         return "redirect:/todo";
     }
@@ -100,8 +106,7 @@ public class TodoController extends BaseController
         {
             todoService.setTodoAsFinished(todo);
             DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            notifyObservers("Das To-Do \\\"" + todo.getName() + "\\\" wurde am " + todo.getCompletionDate().format(pattern)
-                            + " abgeschlossen!");
+            notifyObservers(new TodoMarkedAsCompletedEvent(todo.getName().getValue(), todo.getCompletionDate().format(pattern)));
         });
         return "redirect:/todo";
     }
@@ -120,7 +125,7 @@ public class TodoController extends BaseController
         todoOptional.ifPresent(todo ->
         {
             todoService.setTodoAsNotFinished(todo);
-            notifyObservers("Das To-Do \\\"" + todo.getName() + "\\\" ist nicht länger abgeschlossen!");
+            notifyObservers(new TodoMarkedAsNotCompletedEvent(todo.getName().getValue()));
         });
         return "redirect:/todo";
     }
@@ -140,7 +145,7 @@ public class TodoController extends BaseController
 
         Todo todo = TodoFactory.createSubTodo(todoListId, todoId, name, description, dueDate, reminderDate);
         todoService.createTodo(todo);
-        notifyObservers("Es wurde ein neues Sub-To-Do \\\"" + name + "\\\" erstellt!");
+        notifyObservers(new SubTodoCreatedEvent(name));
         return "redirect:/todo";
     }
 }

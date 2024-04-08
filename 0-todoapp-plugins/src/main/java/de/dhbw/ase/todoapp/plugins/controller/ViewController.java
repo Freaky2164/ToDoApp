@@ -37,6 +37,7 @@ public class ViewController extends BaseController
         }
         List<Todo> finishedTodos = todoService.findFinishedTodosForUser(user);
         List<Notification> notifications = notificationService.findAllForUser(user);
+        notificationManager.setNotifications(notifications);
 
         model.addAttribute("todoMap", todoMap);
         model.addAttribute("finishedTodos", finishedTodos);
