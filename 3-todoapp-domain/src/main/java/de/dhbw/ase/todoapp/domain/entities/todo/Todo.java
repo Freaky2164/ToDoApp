@@ -29,7 +29,7 @@ public class Todo
     @Column(name = "todoListId", nullable = false)
     private UUID todoListId;
 
-    @Column(name = "todoId", nullable = false)
+    @Column(name = "todoId")
     private UUID todoId;
 
     @Embedded
