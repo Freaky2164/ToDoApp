@@ -75,6 +75,6 @@ public class WebHook
     @Override
     public String toString()
     {
-        return "WebHook [url=" + url + "]";
+        return url;
     }
 }

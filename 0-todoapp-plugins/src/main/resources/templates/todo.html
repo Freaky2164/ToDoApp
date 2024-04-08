@@ -228,7 +228,7 @@
                                     <div class="btn-group" role="group" aria-label="Notifications Actions">
                                         <button type="button" class="btn btn-primary me-2 rounded"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#'editNotificationModal-' + ${notification.id}">
+                                            th:data-bs-target="'#editNotificationModal-' + ${notification.id}">
                                             Bearbeiten</button>
                                         <form th:action="@{/deleteNotification}" method="post">
                                             <input type="hidden" name="notificationId" th:value="${notification.id}">
@@ -257,9 +257,6 @@
                         <h5 class="modal-title" id="addNotificationModalLabel">Neue Benachrichtigung hinzufügen</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div th:if="${error}" class="error-message">
-                        <p th:text="${error}" style="color: red;"></p>
-                    </div>
                     <div class="modal-body">
                         <form th:action="@{/createNotification}" method="post">
                             <div class="mb-3">
@@ -278,7 +275,7 @@
         </div>
 
         <div th:each="notification : ${notifications}">
-            <div class="modal fade" id="#'editNotificationModal-' + ${notification.id}" tabindex="-1"
+            <div class="modal fade" th:id="'editNotificationModal-' + ${notification.id}" tabindex="-1"
                 aria-labelledby="editNotificationModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
