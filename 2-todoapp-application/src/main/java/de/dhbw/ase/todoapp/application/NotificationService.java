@@ -8,9 +8,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
-import de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository;
-import de.dhbw.ase.todoapp.domain.entities.user.User;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
+import de.dhbw.ase.todoapp.domain.notification.NotificationRepository;
+import de.dhbw.ase.todoapp.domain.user.User;
 
 
 @Service

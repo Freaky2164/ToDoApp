@@ -8,9 +8,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.entities.user.UserRepository;
-import de.dhbw.ase.todoapp.domain.vo.Email;
+import de.dhbw.ase.todoapp.domain.user.Email;
+import de.dhbw.ase.todoapp.domain.user.User;
+import de.dhbw.ase.todoapp.domain.user.UserRepository;
 
 
 @Repository

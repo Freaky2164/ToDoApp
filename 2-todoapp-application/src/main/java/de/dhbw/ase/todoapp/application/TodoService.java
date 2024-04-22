@@ -9,86 +9,77 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoListRepository;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoRepository;
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.todo.Name;
+import de.dhbw.ase.todoapp.domain.todo.Todo;
+import de.dhbw.ase.todoapp.domain.todo.TodoList;
+import de.dhbw.ase.todoapp.domain.todo.TodoRepository;
+import de.dhbw.ase.todoapp.domain.user.User;
 
 
 @Service
 public class TodoService
 {
-    private final TodoListRepository todoListRepository;
     private final TodoRepository todoRepository;
 
     @Autowired
-    public TodoService(final TodoListRepository todoListRepository, final TodoRepository todoRepository)
+    public TodoService(final TodoRepository todoRepository)
     {
-        this.todoListRepository = todoListRepository;
         this.todoRepository = todoRepository;
     }
 
 
     public Optional<TodoList> findTodoListById(UUID todoListId)
     {
-        return todoListRepository.findById(todoListId);
+        return todoRepository.findTodoListById(todoListId);
     }
 
 
     public Optional<TodoList> findTodoListByName(Name name)
     {
-        return todoListRepository.findByName(name);
+        return todoRepository.findTodoListByName(name);
     }
 
 
     public List<TodoList> findTodoListsForUser(User user)
     {
-        return todoListRepository.findAllByUserId(user.getId());
+        return todoRepository.findTodoListsByUserId(user.getId());
     }
 
 
     public TodoList createTodoList(User user, Name name)
     {
         TodoList todoList = new TodoList(user.getId(), name);
-        return todoListRepository.save(todoList);
+        return todoRepository.save(todoList);
     }
 
 
     public void deleteTodoList(TodoList list)
     {
-        List<Todo> todos = todoRepository.findAllByTodoListId(list.getId());
+        List<Todo> todos = todoRepository.findTodosByTodoListId(list.getId());
         todos.forEach(todoRepository::delete);
-        todoListRepository.delete(list);
+        todoRepository.delete(list);
     }
 
 
     public void renameTodoList(TodoList list, Name name)
     {
         list.changeName(name);
-        todoListRepository.save(list);
+        todoRepository.save(list);
     }
 
 
     public Optional<Todo> findTodoById(UUID todoId)
     {
-        return todoRepository.findById(todoId);
-    }
-
-
-    public List<Todo> findTodosFromTodoList(UUID todoListId)
-    {
-        return todoRepository.findAllByTodoListId(todoListId);
+        return todoRepository.findTodoById(todoId);
     }
 
 
     public List<Todo> findFinishedTodosForUser(User user)
     {
         List<Todo> finishedTodos = new ArrayList<>();
-        for (TodoList todoList : todoListRepository.findAllByUserId(user.getId()))
+        for (TodoList todoList : todoRepository.findTodoListsByUserId(user.getId()))
         {
-            for (Todo todo : todoRepository.findAllByTodoListId(todoList.getId()))
+            for (Todo todo : todoRepository.findTodosByTodoListId(todoList.getId()))
             {
                 if (todo.isDone())
                 {
@@ -103,9 +94,9 @@ public class TodoService
     public List<Todo> findNotFinishedTodosForUser(User user)
     {
         List<Todo> finishedTodos = new ArrayList<>();
-        for (TodoList todoList : todoListRepository.findAllByUserId(user.getId()))
+        for (TodoList todoList : todoRepository.findTodoListsByUserId(user.getId()))
         {
-            for (Todo todo : todoRepository.findAllByTodoListId(todoList.getId()))
+            for (Todo todo : todoRepository.findTodosByTodoListId(todoList.getId()))
             {
                 if (!todo.isDone())
                 {
@@ -125,7 +116,7 @@ public class TodoService
 
     public void deleteTodo(Todo todo)
     {
-        List<Todo> subTodos = todoRepository.findAllSubTodoByTodoId(todo.getId());
+        List<Todo> subTodos = todoRepository.findSubTodosByTodoId(todo.getId());
         subTodos.forEach(todoRepository::delete);
         todoRepository.delete(todo);
     }

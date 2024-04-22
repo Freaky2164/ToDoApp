@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.vo.Email;
+import de.dhbw.ase.todoapp.domain.user.Email;
+import de.dhbw.ase.todoapp.domain.user.User;
 
 
 @Repository

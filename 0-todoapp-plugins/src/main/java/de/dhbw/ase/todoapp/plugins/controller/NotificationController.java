@@ -9,9 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
-import de.dhbw.ase.todoapp.domain.vo.Name;
-import de.dhbw.ase.todoapp.domain.vo.WebHook;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
+import de.dhbw.ase.todoapp.domain.notification.WebHook;
+import de.dhbw.ase.todoapp.domain.todo.Name;
 import jakarta.servlet.http.HttpSession;
 
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
 
 
 @Component

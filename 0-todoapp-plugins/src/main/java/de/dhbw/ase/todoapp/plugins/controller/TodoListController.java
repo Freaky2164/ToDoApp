@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import de.dhbw.ase.todoapp.abstraction.event.TodoListCreatedEvent;
 import de.dhbw.ase.todoapp.abstraction.event.TodoListDeletedEvent;
 import de.dhbw.ase.todoapp.abstraction.event.TodoListRenamedEvent;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.todo.Name;
+import de.dhbw.ase.todoapp.domain.todo.TodoList;
+import de.dhbw.ase.todoapp.domain.user.User;
 import jakarta.servlet.http.HttpSession;
 
 

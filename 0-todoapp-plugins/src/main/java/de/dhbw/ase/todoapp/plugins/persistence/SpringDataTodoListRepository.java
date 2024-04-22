@@ -8,8 +8,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
-import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.todo.Name;
+import de.dhbw.ase.todoapp.domain.todo.TodoList;
 
 
 @Repository

@@ -12,9 +12,9 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.entities.user.UserFactory;
-import de.dhbw.ase.todoapp.domain.vo.Email;
+import de.dhbw.ase.todoapp.domain.user.Email;
+import de.dhbw.ase.todoapp.domain.user.User;
+import de.dhbw.ase.todoapp.domain.user.UserFactory;
 
 
 public class UserRepositoryBridgeTest

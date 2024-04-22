@@ -10,13 +10,13 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.entities.user.UserFactory;
-import de.dhbw.ase.todoapp.domain.entities.user.UserRepository;
 import de.dhbw.ase.todoapp.domain.exceptions.InvalidEmailException;
 import de.dhbw.ase.todoapp.domain.exceptions.InvalidPasswordException;
 import de.dhbw.ase.todoapp.domain.exceptions.UserAlreadyRegisteredException;
-import de.dhbw.ase.todoapp.domain.vo.Password;
+import de.dhbw.ase.todoapp.domain.user.Password;
+import de.dhbw.ase.todoapp.domain.user.User;
+import de.dhbw.ase.todoapp.domain.user.UserFactory;
+import de.dhbw.ase.todoapp.domain.user.UserRepository;
 
 
 public class UserServiceTest

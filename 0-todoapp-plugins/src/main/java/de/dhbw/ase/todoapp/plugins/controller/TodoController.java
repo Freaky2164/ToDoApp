@@ -17,11 +17,11 @@ import de.dhbw.ase.todoapp.abstraction.event.TodoDeletedEvent;
 import de.dhbw.ase.todoapp.abstraction.event.TodoEditedEvent;
 import de.dhbw.ase.todoapp.abstraction.event.TodoMarkedAsCompletedEvent;
 import de.dhbw.ase.todoapp.abstraction.event.TodoMarkedAsNotCompletedEvent;
-import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoFactory;
-import de.dhbw.ase.todoapp.domain.vo.CalendarDate;
-import de.dhbw.ase.todoapp.domain.vo.Description;
-import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.todo.CalendarDate;
+import de.dhbw.ase.todoapp.domain.todo.Description;
+import de.dhbw.ase.todoapp.domain.todo.Name;
+import de.dhbw.ase.todoapp.domain.todo.Todo;
+import de.dhbw.ase.todoapp.domain.todo.TodoFactory;
 import jakarta.servlet.http.HttpSession;
 
 

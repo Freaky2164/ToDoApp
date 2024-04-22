@@ -12,9 +12,9 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
-import de.dhbw.ase.todoapp.domain.entities.notification.NotificationRepository;
-import de.dhbw.ase.todoapp.domain.entities.user.User;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
+import de.dhbw.ase.todoapp.domain.notification.NotificationRepository;
+import de.dhbw.ase.todoapp.domain.user.User;
 
 
 public class NotificationServiceTest

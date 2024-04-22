@@ -10,10 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
-import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
-import de.dhbw.ase.todoapp.domain.entities.user.User;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
+import de.dhbw.ase.todoapp.domain.todo.Todo;
+import de.dhbw.ase.todoapp.domain.todo.TodoList;
+import de.dhbw.ase.todoapp.domain.user.User;
 import jakarta.servlet.http.HttpSession;
 
 

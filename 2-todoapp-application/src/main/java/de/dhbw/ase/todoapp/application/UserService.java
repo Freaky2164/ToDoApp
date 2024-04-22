@@ -7,12 +7,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.entities.user.UserFactory;
-import de.dhbw.ase.todoapp.domain.entities.user.UserRepository;
 import de.dhbw.ase.todoapp.domain.exceptions.UserAlreadyRegisteredException;
-import de.dhbw.ase.todoapp.domain.vo.Email;
-import de.dhbw.ase.todoapp.domain.vo.Password;
+import de.dhbw.ase.todoapp.domain.user.Email;
+import de.dhbw.ase.todoapp.domain.user.Password;
+import de.dhbw.ase.todoapp.domain.user.User;
+import de.dhbw.ase.todoapp.domain.user.UserFactory;
+import de.dhbw.ase.todoapp.domain.user.UserRepository;
 
 
 @Service

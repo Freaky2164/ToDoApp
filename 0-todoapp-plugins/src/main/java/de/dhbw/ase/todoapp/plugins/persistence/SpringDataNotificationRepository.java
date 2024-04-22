@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
 
 
 @Repository

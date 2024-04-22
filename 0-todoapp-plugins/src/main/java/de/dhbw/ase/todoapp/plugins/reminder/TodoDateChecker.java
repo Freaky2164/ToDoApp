@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import de.dhbw.ase.todoapp.application.NotificationService;
 import de.dhbw.ase.todoapp.application.TodoService;
 import de.dhbw.ase.todoapp.application.UserService;
-import de.dhbw.ase.todoapp.domain.entities.notification.reminder.DueDateStrategy;
-import de.dhbw.ase.todoapp.domain.entities.notification.reminder.ReminderDateStrategy;
-import de.dhbw.ase.todoapp.domain.entities.notification.reminder.ReminderStrategy;
-import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
-import de.dhbw.ase.todoapp.domain.entities.user.User;
+import de.dhbw.ase.todoapp.domain.notification.reminder.DueDateStrategy;
+import de.dhbw.ase.todoapp.domain.notification.reminder.ReminderDateStrategy;
+import de.dhbw.ase.todoapp.domain.notification.reminder.ReminderStrategy;
+import de.dhbw.ase.todoapp.domain.todo.Todo;
+import de.dhbw.ase.todoapp.domain.user.User;
 
 
 @Service

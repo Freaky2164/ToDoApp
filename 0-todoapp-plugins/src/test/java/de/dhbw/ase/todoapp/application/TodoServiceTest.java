@@ -14,28 +14,25 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.dhbw.ase.todoapp.domain.entities.todo.Todo;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoFactory;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoList;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoListRepository;
-import de.dhbw.ase.todoapp.domain.entities.todo.TodoRepository;
-import de.dhbw.ase.todoapp.domain.entities.user.User;
-import de.dhbw.ase.todoapp.domain.entities.user.UserFactory;
-import de.dhbw.ase.todoapp.domain.vo.Name;
+import de.dhbw.ase.todoapp.domain.todo.Name;
+import de.dhbw.ase.todoapp.domain.todo.Todo;
+import de.dhbw.ase.todoapp.domain.todo.TodoFactory;
+import de.dhbw.ase.todoapp.domain.todo.TodoList;
+import de.dhbw.ase.todoapp.domain.todo.TodoRepository;
+import de.dhbw.ase.todoapp.domain.user.User;
+import de.dhbw.ase.todoapp.domain.user.UserFactory;
 
 
 public class TodoServiceTest
 {
-    private TodoListRepository todoListRepository;
     private TodoRepository todoRepository;
     private TodoService todoService;
 
     @Before
     public void setUp()
     {
-        todoListRepository = mock(TodoListRepository.class);
         todoRepository = mock(TodoRepository.class);
-        todoService = new TodoService(todoListRepository, todoRepository);
+        todoService = new TodoService(todoRepository);
     }
 
 
@@ -45,7 +42,7 @@ public class TodoServiceTest
         UUID id = UUID.randomUUID();
         TodoList expected = new TodoList(id, new Name("Test"));
 
-        when(todoListRepository.findById(id)).thenReturn(Optional.of(expected));
+        when(todoRepository.findTodoListById(id)).thenReturn(Optional.of(expected));
 
         Optional<TodoList> result = todoService.findTodoListById(id);
 
@@ -61,7 +58,7 @@ public class TodoServiceTest
         Name name = new Name("Test");
         TodoList expected = new TodoList(user.getId(), name);
 
-        when(todoListRepository.save(any(TodoList.class))).thenReturn(expected);
+        when(todoRepository.save(any(TodoList.class))).thenReturn(expected);
 
         TodoList result = todoService.createTodoList(user, name);
 
@@ -83,8 +80,8 @@ public class TodoServiceTest
         todos.add(todo2);
         todos.add(todo3);
 
-        when(todoListRepository.findAllByUserId(user.getId())).thenReturn(List.of(todoList));
-        when(todoRepository.findAllByTodoListId(todoList.getId())).thenReturn(todos);
+        when(todoRepository.findTodoListsByUserId(user.getId())).thenReturn(List.of(todoList));
+        when(todoRepository.findTodosByTodoListId(todoList.getId())).thenReturn(todos);
 
         List<Todo> result = todoService.findFinishedTodosForUser(user);
 
@@ -131,8 +128,8 @@ public class TodoServiceTest
         todos.add(todo2);
         todos.add(todo3);
 
-        when(todoListRepository.findAllByUserId(user.getId())).thenReturn(List.of(todoList));
-        when(todoRepository.findAllByTodoListId(todoList.getId())).thenReturn(todos);
+        when(todoRepository.findTodoListsByUserId(user.getId())).thenReturn(List.of(todoList));
+        when(todoRepository.findTodosByTodoListId(todoList.getId())).thenReturn(todos);
 
         int result = todoService.getNumberOfFinishedTodosForUser(user);
 
@@ -154,8 +151,8 @@ public class TodoServiceTest
         todos.add(todo2);
         todos.add(todo3);
 
-        when(todoListRepository.findAllByUserId(user.getId())).thenReturn(List.of(todoList));
-        when(todoRepository.findAllByTodoListId(todoList.getId())).thenReturn(todos);
+        when(todoRepository.findTodoListsByUserId(user.getId())).thenReturn(List.of(todoList));
+        when(todoRepository.findTodosByTodoListId(todoList.getId())).thenReturn(todos);
 
         int result = todoService.getNumberOfNotFinishedTodosForUser(user);
 

@@ -9,7 +9,7 @@ import de.dhbw.ase.todoapp.abstraction.observer.TodoObserver;
 import de.dhbw.ase.todoapp.application.NotificationService;
 import de.dhbw.ase.todoapp.application.TodoService;
 import de.dhbw.ase.todoapp.application.UserService;
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
 import de.dhbw.ase.todoapp.plugins.component.NotificationManager;
 
 

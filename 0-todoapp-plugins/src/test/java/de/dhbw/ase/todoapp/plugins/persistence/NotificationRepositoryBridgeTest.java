@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import de.dhbw.ase.todoapp.domain.entities.notification.Notification;
-import de.dhbw.ase.todoapp.domain.vo.Name;
-import de.dhbw.ase.todoapp.domain.vo.WebHook;
+import de.dhbw.ase.todoapp.domain.notification.Notification;
+import de.dhbw.ase.todoapp.domain.notification.WebHook;
+import de.dhbw.ase.todoapp.domain.todo.Name;
 
 
 public class NotificationRepositoryBridgeTest
