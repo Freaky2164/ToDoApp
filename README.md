@@ -13,7 +13,7 @@ To start the application you must run the main method in the ToDoApplication cla
 
 ### Login to the application
 
-Before logging in, you have to register an account with an e-mail adress and a password. A password can only consist of numbers and letters and must be at least 8 characters long. Afterwards you can enter an e-mail address and password to login to the application. The project works with an in-memory H2 database which means that data is not persisted over the restarting of the application. Before logging in, you must register yourself by providing an e-mail adress and password. 
+The project works with an in-memory H2 database which means that data is not persisted over the restarting of the application. Before logging in, you have to register an account with an e-mail adress and a password. A password can only consist of numbers and letters and must be at least 8 characters long. 
 
 ![LoginView](https://github.com/Freaky2164/ToDoApp/blob/main/documents/images/LoginView.png)
 
