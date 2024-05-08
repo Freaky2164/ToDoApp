@@ -89,8 +89,7 @@
                                         <div>
                                             <div class="fw-bold" th:text="${todo.name}"></div>
                                             <div class="fw-bold" th:text="${todo.description}"></div>
-                                            <div class="text-muted" th:text="${todo.dueDate}"></div>
-                                        </div>
+										    <div class="text-muted" th:text="${todo.dueDate}" th:classappend="${todo.dueDate.isPastDate() ? 'text-danger' : ''}"></div>                                        </div>
                                         <div class="btn-group" role="group" aria-label="Sub Todo">
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                                 th:data-bs-target="'#createSubTodoModal-' + ${todoListEntry.key.id}">

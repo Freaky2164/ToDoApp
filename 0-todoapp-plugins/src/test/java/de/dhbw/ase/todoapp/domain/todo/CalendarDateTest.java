@@ -32,10 +32,10 @@ public class CalendarDateTest
     @Test
     public void testChangeDate()
     {
-        LocalDate initialDate = LocalDate.of(2024, 3, 25);
+        LocalDate initialDate = LocalDate.now().plusDays(1);
         CalendarDate calendarDate = new CalendarDate(initialDate);
 
-        LocalDate newDate = LocalDate.of(2025, 3, 25);
+        LocalDate newDate = LocalDate.now().plusDays(8);
         CalendarDate changedDate = calendarDate.changeDate(newDate);
 
         assertEquals(newDate, changedDate.getDate());
